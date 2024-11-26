@@ -94,3 +94,23 @@
   .forgot-password:hover {
     color: #007bff; /* Blue on hover */
   }
+
+  .google-login-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #db4437; /* Google red color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 20px; /* Space above the button */
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .google-login-button:hover {
+    background-color: #c33d2e; /* Darker red on hover */
+  }

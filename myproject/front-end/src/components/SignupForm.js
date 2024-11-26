@@ -14,6 +14,7 @@ function SignupForm() {
           className="input-field"
         />
         <button type="submit" className="signup-button">SIGN UP</button>
+        <a href="/accounts/google/login/?next=/main" className="google-login">Sign up with Google</a>
       </form>
     </div>
   );

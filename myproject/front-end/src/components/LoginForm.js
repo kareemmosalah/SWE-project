@@ -14,6 +14,7 @@ function LoginForm() {
         </div>
         <button type="submit" className="login-button">SIGN IN</button>
         <a href="#" className="forgot-password">Forgot your password?</a>
+        <a href="/accounts/google/login/?next=/main" className="google-login">Login with Google</a>
       </form>
     </div>
   );
