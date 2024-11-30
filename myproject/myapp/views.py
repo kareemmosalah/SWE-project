@@ -2,8 +2,6 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate
-from .forms import CustomUserCreationForm
 
 # Sample data for notifications and profile
 sample_notifications = [
@@ -35,11 +33,14 @@ schedule = [
 ]
 
 # Views
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+# Existing imports...
 
 def guest_login(request):
     messages.success(request, "Logged in as Guest.")
     return redirect('main_page')
-
 def entry_page(request):
     return render(request, 'EntryPage.html')
 
@@ -155,12 +156,15 @@ def login_page(request):
 
 def signup_page(request):
     if request.method == "POST":
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, "Account created successfully.")
-            return redirect('main_page')
-    else:
-        form = CustomUserCreationForm()
-    return render(request, 'signup.html', {'form': form})
+        full_name = request.POST.get("full_name")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+        else:
+            messages.success(request, f"Account created for {full_name}.")
+            return redirect('login_page')
+
+    return render(request, 'signup.html')
