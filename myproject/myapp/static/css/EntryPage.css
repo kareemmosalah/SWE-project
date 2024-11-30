@@ -1,0 +1,120 @@
+/* Ensure full height and width for the root elements */
+html, body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Full height */
+    width: 100%; /* Full width */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container spans the whole page */
+.container {
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Hero section spans the container */
+.hero {
+    width: 100%; /* Full width of the container */
+    height: 100%; /* Full height of the container */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Hero image takes less width */
+.hero-image {
+    width: 40%; /* Reduce the image width to 40% */
+    height: 100%; /* Full height of the hero */
+    object-fit: cover; /* Ensure the image fits without distortion */
+}
+
+/* Hero text fills more space */
+.hero-text {
+    flex: 1.5; /* Take more space compared to the image */
+    padding: 40px;
+    text-align: center;
+    color: #333; /* Neutral dark color for text */
+}
+
+/* Main Heading */
+.hero-text h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #000000; /* Blue color for main heading */
+    margin-bottom: 10px;
+}
+
+/* Subheading */
+.hero-text h2 {
+    font-size: 1.5rem;
+    font-weight: normal;
+    color: #444; /* Slightly lighter than main heading */
+    margin-bottom: 20px;
+}
+
+/* Paragraph text */
+.hero-text p {
+    font-size: 1rem;
+    line-height: 1.6; /* Improve readability */
+    color: #666; /* Gray color for paragraph text */
+    margin-bottom: 20px;
+}
+
+/* Buttons align in the center */
+.buttons {
+    display: flex;
+    gap: 20px; /* Add space between buttons */
+    justify-content: center;
+}
+
+.btn {
+    background-color: #0056b3;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold; /* Make the text inside buttons bold */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #004494;
+    transform: translateY(-2px); /* Subtle lift effect on hover */
+}
+
+/* Page-specific styles */
+.page {
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.player-page {
+    background-color: #e0f7fa;
+}
+
+.admin-page {
+    background-color: #fff3e0;
+}

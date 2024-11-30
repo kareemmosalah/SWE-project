@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Court</title>
+    <link rel="stylesheet" href="{% static 'css/Book_Page.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{% url 'home_page' %}">TegyHagz</a>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'main_page' %}">Home</a>
+            <a href="{% url 'book_page' %}">Booking</a>
+            <a href="#">Notification</a>
+            <a href="#">Profile</a>
+        </div>
+
+        
+    </nav>
+    <div class="container">
+        <h1>Book Your Court</h1>
+        <p>Find the perfect court for your game. Choose your time, location, and get ready to play!</p>
+        <div class="form-container">
+            <form action="{% url 'courts_list' %}" method="get">
+                <label for="city">Choose a city:</label>
+                <select name="city" id="city">
+                    <option value="cairo">Cairo</option>
+                    <option value="alexandria">Alexandria</option>
+                    <!-- Add more cities as needed -->
+                </select>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>
+

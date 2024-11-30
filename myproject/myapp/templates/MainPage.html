@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page - Tegy Hagz</title>
+    <link rel="stylesheet" href="{% static 'css/MainPage.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="text-section">
+            <h1>Welcome to Tegy Hagz!</h1>
+            <p>
+                Hello Current user! Welcome to Tegy Hagz. Here you can book a football pitch 
+                to play with your friends or list your pitch and make revenue.
+            </p>
+            <div class="button-group">
+                <button onclick="window.location.href='{% url 'book_page' %}'">Book Now</button>
+                <button >Profile</button>
+                <button >Notification</button>
+            </div>
+        </div>
+        <div class="image-section">
+            <img src="{% static 'images/home-img.png' %}" alt="Football Court Illustration" class="hero-image">
+        </div>
+    </div>
+</body>
+</html>

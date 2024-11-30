@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Court Details</title>
+    <link rel="stylesheet" href="{% static 'css/court_info.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{% url 'home_page' %}">TegyHagz</a>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'main_page' %}">Home</a>
+            <a href="{% url 'book_page' %}">Booking</a>
+            <a href="#">Notification</a>
+            <a href="#">Profile</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>{{ court_name }}</h1>
+        <div class="details">
+            <h3>Details</h3>
+            {% for detail in details %}
+                <p>{{ detail }}</p>
+            {% endfor %}
+        </div>
+        <div class="availability">
+            <h3>Availability</h3>
+            {% for item in availability %}
+                <p>{{ item }}</p>
+            {% endfor %}
+        </div>
+        <div class="pricing">
+            <h3>Pricing</h3>
+            <p>{{ pricing }}</p>
+        </div>
+        <div class="location">
+            <h3>Location</h3>
+            <p>{{ location }}</p>
+            <h3>Contact</h3>
+            <p>Phone: {{ contact.phone }}, Email: {{ contact.email }}</p>
+            <h3>Reviews</h3>
+            <p>{{ reviews }}</p>
+        </div>
+    </div>
+    <form method="post" action="{% url 'court_schedule' %}">
+        {% csrf_token %}
+        <button type="submit">Schedule</button>
+    </form>
+</body>
+</html>

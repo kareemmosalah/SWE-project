@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        <form>
+            <input type="text" placeholder="FULL NAME" class="input-field">
+            <input type="email" placeholder="EMAIL" class="input-field">
+            <input type="password" placeholder="PASSWORD" class="input-field">
+            <input type="password" placeholder="CONFIRM PASSWORD" class="input-field">
+
+            <!-- Button Container -->
+            <div class="button-container">
+                <button type="submit" class="signup-button">SIGN UP</button>
+                {% comment %} href="/accounts/google/login/?next=/main"  {% endcomment %}
+                <a href="/accounts/google/login/?next=/main" class="google-login-button">Sign up with Google</a>
+            </div>
+        </form>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Tegy Hagz - Home</title>
+    <link rel="stylesheet" href="{% static 'css/EntryPage.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <img src="{% static 'images/court-illustration.png' %}" alt="Football Court Illustration" class="hero-image">
+            <div class="hero-text">
+                <h1>Tegy Hagz</h1>
+                <p>Your Football Court Connection</p>
+                <p>
+                    Tegy Hagz is a web platform designed for football enthusiasts.
+                    Whether you're a player, court owner, or administrator, Tegy Hagz
+                    provides a seamless and intuitive experience for booking and
+                    managing football courts.
+                </p>
+                <div class="buttons">
+                    <a href="{% url 'player_login_signup' %}" class="btn">Player</a>
+                    <a href="{% url 'admin_login_signup' %}" class="btn">Admin</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

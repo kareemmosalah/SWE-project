@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Court Schedule</title>
+    <link rel="stylesheet" href="{% static 'css/court_schedule.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{% url 'home_page' %}">TegyHagz</a>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'main_page' %}">Home</a>
+            <a href="{% url 'book_page' %}">Booking</a>
+            <a href="#">Notification</a>
+            <a href="#">Profile</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Court Schedule</h1>
+        <div class="messages">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="success">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="schedule">
+            <h3>Schedule</h3>
+            <table>
+                <tr>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                {% for slot in schedule %}
+                <tr class="{{ slot.status|lower }}">
+                    <td>{{ slot.time }}</td>
+                    <td>{{ slot.status }}</td>
+                    <td>
+                        {% if slot.status == 'Available' %}
+                        <form method="post" action="{% url 'book_time' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="time_slot" value="{{ slot.time }}">
+                            <button type="submit" class="book-button">Book</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</body>
+</html>

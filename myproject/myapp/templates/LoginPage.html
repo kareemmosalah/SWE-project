@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="{% static 'css/LoginPage.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        <form>
+            <input type="text" placeholder="USERNAME" class="input-field">
+            <input type="password" placeholder="PASSWORD" class="input-field">
+            <button type="submit" class="login-button">SIGN IN</button>
+            <a href="/accounts/google/login/?next=/main" class="google-login-button">Login with Google</a>
+        </form>
+    </div>
+</body>
+</html>

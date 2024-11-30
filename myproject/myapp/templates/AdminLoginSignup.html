@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Login/Signup</title>
+    <link rel="stylesheet" href="{% static 'css/AdminLoginSignup.css' %}">
+</head>
+<body>
+    <div class="login-signup-page">
+        <div class="tabs">
+            <span class="active-tab" onclick="showForm('login')">SIGN IN</span>
+            <span class="inactive-tab" onclick="showForm('signup')">SIGN UP</span>
+        </div>
+        <div id="login-form">
+            {% include 'LoginPage.html' %}
+        </div>
+        <div id="signup-form" style="display:none;">
+            {% include 'signup.html' %}
+        </div>
+        <div class="guest-login">
+            <a href="{% url 'guest_login' %}" class="guest-login-button">Continue as Guest</a>
+        </div>
+    </div>
+    <script>
+        function showForm(type) {
+            const loginTab = document.querySelector('.tabs span:nth-child(1)');
+            const signupTab = document.querySelector('.tabs span:nth-child(2)');
+
+            // Toggle visibility of forms
+            document.getElementById('login-form').style.display = type === 'login' ? 'block' : 'none';
+            document.getElementById('signup-form').style.display = type === 'signup' ? 'block' : 'none';
+
+            // Update tab classes
+            if (type === 'login') {
+                loginTab.classList.add('active-tab');
+                loginTab.classList.remove('inactive-tab');
+                signupTab.classList.add('inactive-tab');
+                signupTab.classList.remove('active-tab');
+            } else {
+                signupTab.classList.add('active-tab');
+                signupTab.classList.remove('inactive-tab');
+                loginTab.classList.add('inactive-tab');
+                loginTab.classList.remove('active-tab');
+            }
+        }
+    </script>
+</body>
+</html>
