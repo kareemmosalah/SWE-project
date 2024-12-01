@@ -9,9 +9,10 @@
 </head>
 <body>
     <div class="form-container">
-        <form>
-            <input type="text" placeholder="USERNAME" class="input-field">
-            <input type="password" placeholder="PASSWORD" class="input-field">
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="USERNAME" class="input-field" value="{{ form.username.value|default_if_none:'' }}">
+            <input type="password" name="password" placeholder="PASSWORD" class="input-field" value="{{ form.password.value|default_if_none:'' }}">
             <button type="submit" class="login-button">SIGN IN</button>
             <a href="/accounts/google/login/?next=/main" class="google-login-button">Login with Google</a>
         </form>

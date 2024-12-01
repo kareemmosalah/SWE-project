@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate
+from .forms import CustomUserCreationForm, CustomUserLoginForm
+
+from django.contrib.auth import get_user_model, load_backend
 
 # Sample data for notifications and profile
 sample_notifications = [
@@ -115,56 +119,113 @@ def profile_page(request):
 
 def admin_login_signup(request):
     if request.method == "POST":
-        email = request.POST.get("email")
-        password = request.POST.get("password")
         is_signup = request.POST.get("is_signup") == "true"
 
         if is_signup:
-            messages.success(request, "Admin account created successfully.")
+            form = CustomUserCreationForm(request.POST)
+            if form.is_valid():
+                user = form.save(commit=False)
+                user.is_admin = True  # Set admin flag
+                user.is_player = False  # Ensure player flag is False
+                user.is_staff = True  # Admins should have staff privileges
+                user.is_superuser = True  # Admins should have superuser privileges
+                user.save()
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                messages.success(request, "Admin account created successfully!")
+                return redirect('main_page')
+            else:
+                for field, errors in form.errors.items():
+                    messages.error(request, f"{field}: {', '.join(errors)}")
         else:
-            messages.success(request, "Admin logged in successfully.")
-        return redirect('main_page')
+            form = CustomUserLoginForm(request, data=request.POST)
+            if form.is_valid():
+                user = authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
+                if user is not None and user.is_admin:
+                    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                    messages.success(request, f"Welcome back, Admin {user.username}!")
+                    return redirect('main_page')
+                elif user is not None:
+                    messages.error(request, "You do not have admin privileges.")
+                else:
+                    messages.error(request, "Invalid username or password.")
+            else:
+                for field, errors in form.errors.items():
+                    messages.error(request, f"{field}: {', '.join(errors)}")
+    else:
+        form = CustomUserCreationForm() if request.GET.get("is_signup") == "true" else CustomUserLoginForm()
+    return render(request, 'adminLoginSignup.html', {'form': form})
 
-    return render(request, 'AdminLoginSignup.html')
+# views.py
 
 def player_login_signup(request):
     if request.method == "POST":
-        email = request.POST.get("email")
-        password = request.POST.get("password")
         is_signup = request.POST.get("is_signup") == "true"
 
         if is_signup:
-            messages.success(request, "Player account created successfully.")
+            form = CustomUserCreationForm(request.POST)
+            if form.is_valid():
+                user = form.save(commit=False)
+                user.is_player = True  # Set player flag
+                user.is_admin = False  # Ensure admin flag is False
+                user.save()
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                messages.success(request, "Player account created successfully!")
+                return redirect('main_page')
+            else:
+                for field, errors in form.errors.items():
+                    messages.error(request, f"{field}: {', '.join(errors)}")
         else:
-            messages.success(request, "Player logged in successfully.")
-        return redirect('main_page')
-
-    return render(request, 'playerLoginSignup.html')
+            form = CustomUserLoginForm(request, data=request.POST)
+            if form.is_valid():
+                user = authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
+                if user is not None and user.is_player:
+                    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                    messages.success(request, f"Welcome back, Player {user.username}!")
+                    return redirect('main_page')
+                elif user is not None:
+                    messages.error(request, "You do not have player privileges.")
+                else:
+                    messages.error(request, "Invalid username or password.")
+            else:
+                for field, errors in form.errors.items():
+                    messages.error(request, f"{field}: {', '.join(errors)}")
+    else:
+        form = CustomUserCreationForm() if request.GET.get("is_signup") == "true" else CustomUserLoginForm()
+    return render(request, 'playerLoginSignup.html', {'form': form})
 
 def login_page(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+    if request.method == 'POST':
+        form = CustomUserLoginForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                messages.success(request, f"Welcome, {user.username}!")
+                return redirect('main_page')
+            else:
+                messages.error(request, "Invalid username or password. Please try again.")
+        else:
+            for field, errors in form.errors.items():
+                messages.error(request, f"{field}: {', '.join(errors)}")
+    else:
+        form = CustomUserLoginForm()
+    return render(request, 'login.html', {'form': form})
 
-        if username == "testuser" and password == "password123":
-            messages.success(request, "Logged in successfully.")
+# views.py
+def signup_page(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            messages.success(request, f"Account created successfully, {user.username}. Please explore our features!")
             return redirect('main_page')
         else:
-            messages.error(request, "Invalid credentials. Please try again.")
-
-    return render(request, 'LoginPage.html')
-
-def signup_page(request):
-    if request.method == "POST":
-        full_name = request.POST.get("full_name")
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        confirm_password = request.POST.get("confirm_password")
-
-        if password != confirm_password:
-            messages.error(request, "Passwords do not match.")
-        else:
-            messages.success(request, f"Account created for {full_name}.")
-            return redirect('login_page')
-
-    return render(request, 'signup.html')
+            for field, errors in form.errors.items():
+                messages.error(request, f"{field}: {', '.join(errors)}")
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'signup.html', {'form': form})

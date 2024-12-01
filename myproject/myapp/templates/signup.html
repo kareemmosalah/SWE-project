@@ -9,20 +9,28 @@
 </head>
 <body>
     <div class="form-container">
-        <form>
-            <input type="text" placeholder="FULL NAME" class="input-field">
-            <input type="email" placeholder="EMAIL" class="input-field">
-            <input type="password" placeholder="PASSWORD" class="input-field">
-            <input type="password" placeholder="CONFIRM PASSWORD" class="input-field">
-
-            <!-- Button Container -->
-            <div class="button-container">
-                <button type="submit" class="signup-button">SIGN UP</button>
-                {% comment %} href="/accounts/google/login/?next=/main"  {% endcomment %}
-                <a href="/accounts/google/login/?next=/main" class="google-login-button">Sign up with Google</a>
-            </div>
+        <form method="post" action="{% url 'signup_page' %}">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <input type="text" name="username" placeholder="USERNAME" class="input-field" value="{{ form.username.value|default_if_none:'' }}">
+            {{ form.username.errors }}
+            <input type="email" name="email" placeholder="EMAIL" class="input-field" value="{{ form.email.value|default_if_none:'' }}">
+            {{ form.email.errors }}
+            <input type="password" name="password1" placeholder="PASSWORD" class="input-field" value="{{ form.password1.value|default_if_none:'' }}">
+            {{ form.password1.errors }}
+            <input type="password" name="password2" placeholder="CONFIRM PASSWORD" class="input-field" value="{{ form.password2.value|default_if_none:'' }}">
+            {{ form.password2.errors }}
+            <button type="submit" class="signup-button">SIGN UP</button>
+            <a href="/accounts/google/login/?next=/main" class="google-login-button">Sign up with Google</a>
         </form>
-
+        <!-- Display messages -->
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
 </body>
 </html>
