@@ -47,7 +47,8 @@
                             <input type="hidden" name="time_slot" value="{{ slot.time }}">
                             <button type="submit" class="book-button">Book</button>
                         </form>
-                        
+                        {% else %}
+                        <button disabled>Booked</button>
                         {% endif %}
                     </td>
                 </tr>
