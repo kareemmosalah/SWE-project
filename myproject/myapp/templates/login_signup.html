@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup</title>
+    <link rel="stylesheet" href="{% static 'css/LoginSignup.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        <!-- Navigation Tabs -->
+        <div class="tabs">
+            <span class="active-tab" onclick="showForm('login')">SIGN IN</span>
+            <span class="inactive-tab" onclick="showForm('signup')">SIGN UP</span>
+        </div>
+
+        <!-- Forms -->
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="user_type" value="{{ user_type }}">
+
+            <!-- Login Form -->
+            <div id="login-form">
+                <input type="text" name="username" placeholder="USERNAME" class="input-field" required>
+                <input type="password" name="password" placeholder="PASSWORD" class="input-field" required>
+                <button type="submit" name="action" value="Login" class="btn">SIGN IN</button>
+                <a href="/accounts/google/login/?next=/main" class="btn google-login-button">Login with Google</a>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signup-form">
+                <input type="text" name="username" placeholder="USERNAME" class="input-field" required>
+                <input type="email" name="email" placeholder="EMAIL" class="input-field" required>
+                <input type="password" name="password1" placeholder="PASSWORD" class="input-field" required>
+                <input type="password" name="password2" placeholder="CONFIRM PASSWORD" class="input-field" required>
+                <button type="submit" name="action" value="signup" class="btn">SIGN UP</button>
+                <a href="/accounts/google/login/?next=/main" class="btn google-login-button">Sign up with Google</a>
+
+                
+            </div>
+            <div>
+                <a href="{% url 'main_page' %}" >Continue as Guest</a>
+                </div>
+            
+        </form>
+        
+        
+
+        <!-- Continue as Guest -->
+    
+        <!-- Messages -->
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    
+
+    <!-- JavaScript for Form Toggle -->
+    <script>
+        function showForm(type) {
+            const loginTab = document.querySelector('.tabs span:nth-child(1)');
+            const signupTab = document.querySelector('.tabs span:nth-child(2)');
+
+            // Toggle visibility of forms
+            document.getElementById('login-form').style.display = type === 'login' ? 'block' : 'none';
+            document.getElementById('signup-form').style.display = type === 'signup' ? 'block' : 'none';
+
+            // Update tab classes
+            if (type === 'login') {
+                loginTab.classList.add('active-tab');
+                loginTab.classList.remove('inactive-tab');
+                signupTab.classList.add('inactive-tab');
+                signupTab.classList.remove('active-tab');
+            } else {
+                signupTab.classList.add('active-tab');
+                signupTab.classList.remove('inactive-tab');
+                loginTab.classList.add('inactive-tab');
+                loginTab.classList.remove('active-tab');
+            }
+        }
+
+        // Ensure the login form is shown by default if user_type is 'player'
+        document.addEventListener('DOMContentLoaded', function() {
+            showForm('login');
+        });
+    </script>
+   
+</body>
+
+</html>

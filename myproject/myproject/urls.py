@@ -12,9 +12,8 @@ urlpatterns = [
     path('courts-list/', views.courts_list, name='courts_list'),
     path('court-schedule/', views.court_schedule, name='court_schedule'),
     path('main/', views.main_page, name='main_page'),
-    path('admin-login-signup/', views.admin_login_signup, name='admin_login_signup'),
-    path('player-login-signup/', views.player_login_signup, name='player_login_signup'),
-    path('login/', views.login_page, name='login_page'),
-     path('book-time/', views.book_time, name='book_time'),
-    path('signup/', views.signup_page, name='signup_page'),
+    path('login-signup/', views.login_signup_page, name='login_signup_page'),
+ 
+    path('book-time/', views.book_time, name='book_time'),
+
 ]

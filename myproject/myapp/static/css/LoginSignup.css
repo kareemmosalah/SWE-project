@@ -5,7 +5,9 @@ html, body * {
 }
 
 body {
-    background: linear-gradient(rgba(246, 247, 249, 0.8), rgba(246, 247, 249, 0.8)),
+    background: linear-gradient(
+            rgba(246, 247, 249, 0.8),
+            rgba(246, 247, 249, 0.8)),
         url('https://dl.dropboxusercontent.com/u/22006283/preview/codepen/sky-clouds-cloudy-mountain.jpg') no-repeat center center fixed;
     background-size: cover;
     margin: 0;
@@ -34,6 +36,34 @@ body {
     overflow: hidden;
 }
 
+/* Navigation tabs */
+.tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.tabs span {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.5s ease, border-bottom 0.5s ease;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.active-tab {
+    color: #ffffff;
+    border-bottom: 2px solid #1059ff;
+}
+
+.inactive-tab:hover {
+    color: #ffffff;
+}
+
 /* Input fields */
 .input-field {
     width: 100%;
@@ -56,32 +86,12 @@ body {
     color: rgba(255, 255, 255, 0.7);
 }
 
-/* Signup button */
-.signup-button {
-    width: 100%;
-    padding: 15px;
-    background-color: rgba(16, 89, 255, 1);
-    color: #fff;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    transition: all 0.5s ease;
-    margin-top: 10px; /* Add margin to separate buttons */
-}
-
-.signup-button:hover {
-    background-color: #0f4fe6;
-}
-
-/* Google login button */
-.google-login-button {
+/* Buttons */
+.btn {
     display: block;
     width: 100%;
     padding: 15px;
-    background-color: #db4437;
+    background-color: #1059ff;
     color: #fff;
     border: none;
     border-radius: 20px;
@@ -90,7 +100,19 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     transition: all 0.5s ease;
-    margin-top: 10px; /* Add margin to separate buttons */
+    margin-top: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn:hover {
+    background-color: #0f4fe6;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Google login button with consistent style */
+.google-login-button {
+    background-color: #db4437;
+    margin-top: 10px;
 }
 
 .google-login-button:hover {
@@ -113,4 +135,9 @@ body {
 
 .messages .error {
     color: red;
+}
+
+/* Hide form by default */
+#signup-form {
+    display: none;
 }
