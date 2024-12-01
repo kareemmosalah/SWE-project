@@ -12,11 +12,10 @@ urlpatterns = [
     path('courts-list/', views.courts_list, name='courts_list'),  # Courts list URL
     path('court-schedule/<int:court_id>/', views.court_schedule, name='court_schedule'),  # Court schedule URL with court_id parameter
     path('main/', views.main_page, name='main_page'),  # Main page URL
-    path('admin-login-signup/', views.admin_login_signup, name='admin_login_signup'),  # Admin login/signup URL
-    path('player-login-signup/', views.player_login_signup, name='player_login_signup'),  # Player login/signup URL
-    path('login/', views.login_page, name='login_page'),  # Login page URL
+
+    path('login-signup/', views.login_signup_page, name='login_signup_page'),
     path('book-time/<int:court_id>/', views.book_time, name='book_time'),  # Book time URL with court_id parameter
-    path('signup/', views.signup_page, name='signup_page'),  # Signup page URL
+    
     path('owner', views.court_owner_page, name='court_owner_page'),  # Court owner page URL
     path('user-profile/', views.user_profile, name='user_profile'),
     path('owner', views.court_owner_dashboard, name='court_owner_dashboard'),
