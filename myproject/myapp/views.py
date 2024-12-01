@@ -24,18 +24,18 @@ sample_user_profile = {
     ],
 }
 
-schedule = [
-    {'time': '08:00 AM - 09:00 AM', 'status': 'Available'},
-    {'time': '09:00 AM - 10:00 AM', 'status': 'Available'},
-    {'time': '10:00 AM - 11:00 AM', 'status': 'Available'},
-    {'time': '11:00 AM - 12:00 PM', 'status': 'Available'},
-    {'time': '12:00 PM - 01:00 PM', 'status': 'Available'},
-    {'time': '01:00 PM - 02:00 PM', 'status': 'Available'},
-    {'time': '02:00 PM - 03:00 PM', 'status': 'Available'},
-    {'time': '03:00 PM - 04:00 PM', 'status': 'Available'},
-    {'time': '04:00 PM - 05:00 PM', 'status': 'Available'},
-    {'time': '05:00 PM - 06:00 PM', 'status': 'Available'},
-]
+# schedule = [
+#     {'time': '08:00 AM - 09:00 AM', 'status': 'Available'},
+#     {'time': '09:00 AM - 10:00 AM', 'status': 'Available'},
+#     {'time': '10:00 AM - 11:00 AM', 'status': 'Available'},
+#     {'time': '11:00 AM - 12:00 PM', 'status': 'Available'},
+#     {'time': '12:00 PM - 01:00 PM', 'status': 'Available'},
+#     {'time': '01:00 PM - 02:00 PM', 'status': 'Available'},
+#     {'time': '02:00 PM - 03:00 PM', 'status': 'Available'},
+#     {'time': '03:00 PM - 04:00 PM', 'status': 'Available'},
+#     {'time': '04:00 PM - 05:00 PM', 'status': 'Available'},
+#     {'time': '05:00 PM - 06:00 PM', 'status': 'Available'},
+# ]
 
 # Views
 
@@ -48,6 +48,7 @@ def entry_page(request):
 
 def book_page(request):
     return render(request, 'Book_Page.html')
+
 
 def court_info(request, court_id):
     court_data = {
@@ -70,7 +71,9 @@ def court_info(request, court_id):
             'reviews': '4.0 Stars',
         },
     }
+    court_id = int(court_id)  # Ensure court_id is an integer
     context = court_data.get(court_id, {})
+    context['court_id'] = court_id  # Include court_id in the context
     return render(request, 'Court_Info.html', context)
 
 def courts_list(request):
@@ -89,20 +92,93 @@ def courts_list(request):
     context = {'city': city, 'courts': courts}
     return render(request, 'Courts_List.html', context)
 
-def court_schedule(request):
-    context = {'schedule': schedule}
+# Define schedules for each court by ID
+court_schedules = {
+    1: [
+        {'time': '08:00 AM - 09:00 AM', 'status': 'Available'},
+        {'time': '09:00 AM - 10:00 AM', 'status': 'Available'},
+        {'time': '10:00 AM - 11:00 AM', 'status': 'Available'},
+        {'time': '11:00 AM - 12:00 PM', 'status': 'Available'},
+        {'time': '12:00 PM - 01:00 PM', 'status': 'Available'},
+        {'time': '01:00 PM - 02:00 PM', 'status': 'Available'},
+        {'time': '02:00 PM - 03:00 PM', 'status': 'Available'},
+        {'time': '03:00 PM - 04:00 PM', 'status': 'Available'},
+        {'time': '04:00 PM - 05:00 PM', 'status': 'Available'},
+        {'time': '05:00 PM - 06:00 PM', 'status': 'Available'},
+    ],
+    2: [
+        {'time': '08:00 AM - 09:00 AM', 'status': 'Available'},
+        {'time': '09:00 AM - 10:00 AM', 'status': 'Available'},
+        {'time': '10:00 AM - 11:00 AM', 'status': 'Available'},
+        {'time': '11:00 AM - 12:00 PM', 'status': 'Available'},
+        {'time': '12:00 PM - 01:00 PM', 'status': 'Available'},
+        {'time': '01:00 PM - 02:00 PM', 'status': 'Available'},
+        {'time': '02:00 PM - 03:00 PM', 'status': 'Available'},
+        {'time': '03:00 PM - 04:00 PM', 'status': 'Available'},
+        {'time': '04:00 PM - 05:00 PM', 'status': 'Available'},
+        {'time': '05:00 PM - 06:00 PM', 'status': 'Available'},
+    ],
+    # Add more courts as needed
+}
+
+def court_schedule(request, court_id):
+    court_schedules = {
+        1: [
+            {'time': '08:00 AM - 09:00 AM', 'status': 'Available'},
+            {'time': '09:00 AM - 10:00 AM', 'status': 'Booked'},
+            # Add more time slots as needed
+        ],
+        2: [
+            {'time': '08:00 AM - 09:00 AM', 'status': 'Booked'},
+            {'time': '09:00 AM - 10:00 AM', 'status': 'Available'},
+            # Add more time slots as needed
+        ],
+    }
+    schedule = court_schedules.get(court_id, [])
+    context = {'schedule': schedule, 'court_id': court_id}
     return render(request, 'Court_schedule.html', context)
 
-def book_time(request):
+
+# Assuming court_schedules is a global variable or can be fetched from a database
+
+court_schedules = {
+    1: [
+        {'time': '08:00 AM - 09:00 AM', 'status': 'Available'},
+        {'time': '09:00 AM - 10:00 AM', 'status': 'Booked'},
+    ],
+    2: [
+        {'time': '08:00 AM - 09:00 AM', 'status': 'Available'},
+        {'time': '09:00 AM - 10:00 AM', 'status': 'Available'},
+    ],
+}
+
+def book_time(request, court_id):
     if request.method == 'POST':
         time_slot = request.POST.get('time_slot')
+
+        if not time_slot:
+            messages.error(request, 'No time slot selected.')
+            return redirect('court_schedule', court_id=court_id)
+
+        schedule = court_schedules.get(court_id, [])
+
         for slot in schedule:
-            if slot['time'] == time_slot and slot['status'] == 'Available':
-                slot['status'] = 'Booked'
-                messages.success(request, f'Time slot {time_slot} booked successfully!')
+            if slot['time'] == time_slot:
+                if slot['status'] == 'Available':
+                    slot['status'] = 'Booked'
+                    messages.success(request, f'Time slot "{time_slot}" booked successfully!')
+                else:
+                    messages.error(request, f'Time slot "{time_slot}" is already booked.')
                 break
-        return redirect('court_schedule')
-    return redirect('court_schedule')
+        else:
+            messages.error(request, f'Time slot "{time_slot}" not found.')
+
+        # Pass updated schedule back to the template
+        return render(request, 'court_schedule.html', {'schedule': schedule, 'court_id': court_id})
+
+    return redirect('court_schedule', court_id=court_id)
+
+
 
 def main_page(request):
     context = {
@@ -111,9 +187,9 @@ def main_page(request):
     return render(request, 'MainPage.html', context)
 
 @login_required
-def profile_page(request):
+def user_profile(request):
     context = {"profile": sample_user_profile}
-    return render(request, 'profile.html', context)
+    return render(request, 'user_profile.html', context)
 
 def login_signup_page(request):
     user_type = request.GET.get('user_type', 'player')  # Default to 'player'
