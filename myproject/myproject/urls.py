@@ -16,7 +16,6 @@ urlpatterns = [
     path('login-signup/', views.login_signup_page, name='login_signup_page'),
     path('book-time/<int:court_id>/', views.book_time, name='book_time'),  # Book time URL with court_id parameter
     
-    path('owner', views.court_owner_page, name='court_owner_page'),  # Court owner page URL
     path('user-profile/', views.user_profile, name='user_profile'),
     path('owner', views.court_owner_dashboard, name='court_owner_dashboard'),
     # path('Notification/' , views.index , name='Notify'),
