@@ -16,7 +16,7 @@
             <a href="{% url 'main_page' %}">Home</a>
             <a href="{% url 'book_page' %}">Booking</a>
             <a href="#">Notification</a>
-            <a href="#">Profile</a>
+            <a href="{% url 'user_profile' %}">Profile</a>
         </div>
     </nav>
     <div class="container">
@@ -46,9 +46,8 @@
             <p>{{ reviews }}</p>
         </div>
     </div>
-    <form method="post" action="{% url 'court_schedule' %}">
-        {% csrf_token %}
-        <button type="submit">Schedule</button>
+    <form method="get" action="{% url 'court_schedule' court_id %}">
+        <button type="submit">View Schedule</button>
     </form>
 </body>
 </html>

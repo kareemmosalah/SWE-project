@@ -16,7 +16,7 @@
             <a href="{% url 'main_page' %}">Home</a>
             <a href="{% url 'book_page' %}">Booking</a>
             <a href="#">Notification</a>
-            <a href="#">Profile</a>
+            <a href="{% url 'user_profile' %}">Profile</a>
         </div>
     </nav>
     <div class="container">
@@ -24,7 +24,9 @@
         <div class="courts-list">
             <ul>
                 {% for court in courts %}
-                    <li><a href="{% url 'court_info' court.id %}">{{ court.name }}</a></li>
+                    <li>
+                        <a href="{% url 'court_info' court.id %}">{{ court.name }}</a>
+                    </li>
                 {% endfor %}
             </ul>
         </div>

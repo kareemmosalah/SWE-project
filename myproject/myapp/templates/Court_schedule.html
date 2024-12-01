@@ -16,7 +16,7 @@
             <a href="{% url 'main_page' %}">Home</a>
             <a href="{% url 'book_page' %}">Booking</a>
             <a href="#">Notification</a>
-            <a href="#">Profile</a>
+            <a href="{% url 'user_profile' %}">Profile</a>
         </div>
     </nav>
     <div class="container">
@@ -42,11 +42,12 @@
                     <td>{{ slot.status }}</td>
                     <td>
                         {% if slot.status == 'Available' %}
-                        <form method="post" action="{% url 'book_time' %}">
+                        <form method="post" action="{% url 'book_time' court_id %}">
                             {% csrf_token %}
                             <input type="hidden" name="time_slot" value="{{ slot.time }}">
                             <button type="submit" class="book-button">Book</button>
                         </form>
+                        
                         {% endif %}
                     </td>
                 </tr>
