@@ -18,7 +18,7 @@ urlpatterns = [
     
     path('user-profile/', views.user_profile, name='user_profile'),
     path('owner', views.court_owner_dashboard, name='court_owner_dashboard'),
-    # path('Notification/' , views.index , name='Notify'),
+    path('Notification/' , views.notification_page , name='notification'),
     # path('send/' , views.send),
     # path('firebase-messaging-sw.js',views.showFirebaseJS,name="show_firebase_js")  # User profile page URL
 ]
