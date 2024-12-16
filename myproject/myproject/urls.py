@@ -21,4 +21,6 @@ urlpatterns = [
     path('Notification/' , views.notification_page , name='notification'),
     # path('send/' , views.send),
     # path('firebase-messaging-sw.js',views.showFirebaseJS,name="show_firebase_js")  # User profile page URL
+    path('change-username/', views.change_username, name='change_username'),
+    path('change-password/', views.change_password, name='change_password'),
 ]

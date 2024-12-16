@@ -335,26 +335,29 @@ def court_owner_dashboard(request):
     }
     return render(request, 'owner.html', context)
 
+from .models import Court
+
 def add_court(request):
-    """
-    Handles the addition of a new court by the court owner.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: Redirects to the court owner dashboard if the court is successfully added,
-                      otherwise renders the add court page.
-
-    The function processes the POST request to create a new court with the provided name, location, and price.
-    """
     if request.method == 'POST':
-        name = request.POST['name']
+        name = request.POST['courtName']
         location = request.POST['location']
         price = request.POST['price']
-        Court.objects.create(owner=request.user, name=name, location=location, price_per_hour=price)
+        contact_phone = request.user.username
+        contact_email = request.user.email
+        
+        Court.objects.create(
+            name=name, 
+            location=location, 
+            pricing=price, 
+            contact_phone=contact_phone, 
+            contact_email=contact_email,
+            details='Details not provided', 
+            reviews='Not yet reviewed'
+        )
+        messages.success(request, "Court added successfully!")
         return redirect('court_owner_dashboard')
-    return render(request, 'court_owner/add_court.html')
+    return render(request, 'owner.html')
+
 
 def view_profits(request):
     """
@@ -420,3 +423,36 @@ def notification_page(request):
     The function simply renders the 'Notification.html' template.
     """
     return render(request, 'Notification.html')
+
+from .models import Court
+def court_owner_dashboard(request):
+    courts = Court.objects.filter(contact_email=request.user.email)
+    context = {'courts': courts}
+    return render(request, 'owner.html', context)
+
+
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+
+def change_username(request):
+    if request.method == 'POST':
+        new_username = request.POST['new_username']
+        request.user.username = new_username
+        request.user.save()
+        messages.success(request, "Username updated successfully!")
+    return redirect('user_profile')
+
+from django.contrib.auth.forms import PasswordChangeForm
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Keeps the user logged in
+            messages.success(request, "Password updated successfully!")
+        else:
+            messages.error(request, "Password update failed. Please check the form.")
+    return redirect('user_profile')

@@ -142,11 +142,11 @@
       <div class="profile-details">
         <div class="profile-item">
           <h2>Username</h2>
-          <p>Your current user name is: <strong>Ahmed Kahla</strong></p>
+          <p>Your current user name is: <strong>{{ request.user.username }}</strong></p>
         </div>
         <div class="profile-item">
           <h2>Email</h2>
-          <p>Your current email is: <strong>ahmedkahlacr11@gmail.com</strong></p>
+          <p>Your current email is: <strong>{{ request.user.email }}</strong></p>
         </div>
         <div class="profile-item">
           <h2>Password</h2>
@@ -157,6 +157,26 @@
         {% load static %}
         <img src="{% static 'images/Elsehrawy.jpg' %}" alt="Profile Picture">      </div>
     </div>
+    <div class="profile-item">
+      <h2>Change Username</h2>
+      <form method="POST" action="{% url 'change_username' %}">
+          {% csrf_token %}
+          <input type="text" name="new_username" placeholder="Enter new username" required>
+          <button type="submit">Update Username</button>
+      </form>
+  </div>
+  
+  <div class="profile-item">
+      <h2>Change Password</h2>
+      <form method="POST" action="{% url 'change_password' %}">
+          {% csrf_token %}
+          <input type="password" name="old_password" placeholder="Current password" required>
+          <input type="password" name="new_password1" placeholder="New password" required>
+          <input type="password" name="new_password2" placeholder="Confirm new password" required>
+          <button type="submit">Update Password</button>
+      </form>
+  </div>
+      
   </div>
 </body>
 </html>

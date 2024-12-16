@@ -142,6 +142,20 @@
         <p>Loading profits...</p>
       </div>
     </section>
+    <section class="view-courts">
+      <h2>Your Courts</h2>
+      {% for court in courts %}
+        <div>
+          <h3>{{ court.name }}</h3>
+          <p>Location: {{ court.location }}</p>
+          <p>Pricing: {{ court.pricing }}</p>
+          <p>Contact: {{ court.contact_phone }}</p>
+        </div>
+      {% empty %}
+        <p>No courts added yet.</p>
+      {% endfor %}
+    </section>
+    
 
     <div class="action-buttons">
     <a href="{% url 'user_profile' %}" class="profile-btn">Go to Profile</a>
