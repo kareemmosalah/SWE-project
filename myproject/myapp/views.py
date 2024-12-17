@@ -134,11 +134,11 @@ def courts_list(request):
         HttpResponse: The rendered HTML response containing the list of courts.
     """
     city = request.GET.get('city')
-    print(city)  # Debug statement to check city data
+    print(city)  
     courts = Court.objects.filter(city__icontains=city)
-    print(courts)  # Debug statement to check courts data
+    print(courts)  
     context = {'city': city, 'courts': courts}
-    print(context)  # Debug statement to check context data
+    print(context)  
     return render(request, 'Courts_List.html', context)# def courts_list(request):
 #     """
 #     View function that retrieves a list of courts based on the specified city.
