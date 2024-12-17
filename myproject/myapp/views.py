@@ -293,7 +293,6 @@ def login_signup_page(request):
 
     return render(request, 'login_signup.html', {'user_type': user_type})
 
-@login_required
 def court_owner_dashboard(request):
     """
     Renders the dashboard for court owners with their courts and total profit.
