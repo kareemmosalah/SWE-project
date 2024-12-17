@@ -17,6 +17,7 @@ class Court(models.Model):
     contact_phone = models.CharField(max_length=15)
     contact_email = models.EmailField()
     reviews = models.CharField(max_length=50)
+    city = models.CharField(max_length=100)  # Add this line
 
     def __str__(self):
         return self.name

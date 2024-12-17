@@ -93,6 +93,9 @@ def book_page(request):
     """
     return render(request, 'Book_Page.html')
 
+from django.shortcuts import render, get_object_or_404
+from .models import Court
+
 def court_info(request, court_id):
     """
     Provides information about a specific court based on the court_id.
@@ -104,29 +107,16 @@ def court_info(request, court_id):
     Returns:
         HttpResponse: Renders a template with court information.
     """
-    court_data = {
-        1: {
-            'court_name': 'Court 1',
-            'details': ['Detail 1', 'Detail 2'],
-            'availability': ['Available 1', 'Available 2'],
-            'pricing': '$10/hour',
-            'location': 'Location 1',
-            'contact': {'phone': '1234567890', 'email': 'court1@example.com'},
-            'reviews': '4.5 Stars',
-        },
-        2: {
-            'court_name': 'Court 2',
-            'details': ['Detail 3', 'Detail 4'],
-            'availability': ['Available 3', 'Available 4'],
-            'pricing': '$15/hour',
-            'location': 'Location 2',
-            'contact': {'phone': '0987654321', 'email': 'court2@example.com'},
-            'reviews': '4.0 Stars',
-        },
+    court = get_object_or_404(Court, id=court_id)
+    context = {
+        'court_id': court.id,
+        'court_name': court.name,
+        'details': court.details.split(','),
+        'pricing': court.pricing,
+        'location': court.location,
+        'contact': {'phone': court.contact_phone, 'email': court.contact_email},
+        'reviews': court.reviews,
     }
-    court_id = int(court_id)  # Ensure court_id is an integer
-    context = court_data.get(court_id, {})
-    context['court_id'] = court_id  # Include court_id in the context
     return render(request, 'Court_Info.html', context)
 
 def courts_list(request):
@@ -169,18 +159,7 @@ def court_schedule(request, court_id):
         HttpResponse: The HTTP response object containing the rendered template.
 
     """
-    # court_schedules = {
-    #     1: [
-    #         {'time': '08:00 AM - 09:00 AM', 'status': 'Available'},
-    #         {'time': '09:00 AM - 10:00 AM', 'status': 'Booked'},
-    #         # Add more time slots as needed
-    #     ],
-    #     2: [
-    #         {'time': '08:00 AM - 09:00 AM', 'status': 'Booked'},
-    #         {'time': '09:00 AM - 10:00 AM', 'status': 'Available'},
-    #         # Add more time slots as needed
-    #     ],
-    # }
+ 
     schedule = court_schedules.get(court_id, [])
     context = {'schedule': schedule, 'court_id': court_id}
     return render(request, 'Court_schedule.html', context)
