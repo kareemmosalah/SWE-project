@@ -21,7 +21,8 @@ class Court(models.Model):
 
     def __str__(self):
         return self.name
-
+    def __str__(self):
+        return self.name
 class Schedule(models.Model):
     court = models.ForeignKey(Court, on_delete=models.CASCADE)
     time = models.CharField(max_length=50)

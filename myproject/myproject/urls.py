@@ -23,6 +23,9 @@ urlpatterns = [
     path('Notification/', views.notification_page, name='notification'),
     path('change-username/', views.change_username, name='change_username'),
     path('change-password/', views.change_password, name='change_password'),
+    path('owner', views.court_owner_dashboard, name='court_owner_dashboard'),
+    path('add-court/', views.add_court, name='add_court'),
+    # path('owner/', views.court_owner_dashboard, name='court_owner_dashboard'),
     # path('change-profile-photo/', views.change_profile_photo, name='change_profile_photo'),  # New URL
 ]
 

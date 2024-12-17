@@ -335,25 +335,28 @@ def court_owner_dashboard(request):
 
 from .models import Court
 
+
 def add_court(request):
     if request.method == 'POST':
         name = request.POST['courtName']
         location = request.POST['location']
         price = request.POST['price']
-        contact_phone = request.user.username
-        contact_email = request.user.email
-        
+        contact_phone = request.user.username  # Use logged-in user's username
+        contact_email = request.user.email     # Use logged-in user's email
+
+        # Save court to database
         Court.objects.create(
-            name=name, 
-            location=location, 
-            pricing=price, 
-            contact_phone=contact_phone, 
+            name=name,
+            location=location,
+            pricing=price,
+            contact_phone=contact_phone,
             contact_email=contact_email,
             details='Details not provided', 
-            reviews='Not yet reviewed'
+            reviews='No reviews yet',
         )
         messages.success(request, "Court added successfully!")
         return redirect('court_owner_dashboard')
+
     return render(request, 'owner.html')
 
 
