@@ -5,50 +5,99 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Profile</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    /* Global Reset */
+    * {
       margin: 0;
       padding: 0;
-      background-color: #f9f9f9;
-      color: #333;
+      box-sizing: border-box;
     }
 
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #111;
+      padding: 15px 30px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .navbar .logo a {
+      font-size: 1.8rem;
+      color: #29a829;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: #29a829;
+    }
+
+    /* Profile Container */
     .profile-container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 50px auto;
-      padding: 20px;
-      text-align: center;
-      background-color: #fff;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
       font-size: 2rem;
-      color: #444;
-      margin-bottom: 30px;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
     }
 
     .profile-content {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
+      text-align: center;
       gap: 20px;
-      flex-wrap: wrap;
+    }
+
+    .profile-picture img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #29a829;
     }
 
     .profile-details {
-      flex: 1;
+      width: 100%;
       text-align: left;
     }
 
     .profile-item {
-      margin-bottom: 20px;
+      margin: 15px 0;
     }
 
     .profile-item h2 {
       font-size: 1.2rem;
-      color: #666;
+      margin-bottom: 5px;
+      color: #555;
     }
 
     .profile-item p {
@@ -56,93 +105,96 @@
       color: #333;
     }
 
-    .profile-item strong {
-      color: #444;
+    strong {
+      font-weight: bold;
+      color: #000;
     }
 
-    .profile-picture {
-      flex: 1;
+    /* Forms */
+    form {
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
     }
 
-    .profile-picture img {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      background-color: #eaeaea;
-      object-fit: cover;
+    input {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      outline: none;
+      transition: border-color 0.3s ease;
     }
-    .navbar {
-    display: flex;
-     /* Logo to left, links to right */
-    align-items: center;
-    padding: 15px 30px;
-    background-color: rgba(0, 0, 0, 0.9); /* Slightly darker transparent background */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
-    position: sticky;
-    top: 0; /* Stick to the top on scroll */
-    z-index: 1000; /* Ensure navbar is on top */
-  }
 
-  .logo a {
-    font-size: 28px;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #239931; /* Bright blue for logo text */
-    text-decoration: none;
-    transition: color 0.3s ease; /* Smooth hover transition */
-}
+    input:focus {
+      border-color: #29a829;
+    }
 
-.logo a:hover {
-    color: #0f6f28; /* Slightly darker blue on hover */
-}
+    button {
+      padding: 10px;
+      font-size: 1rem;
+      background-color: #29a829;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-/* Nav links container */
-.nav-links {
-    display: flex;
-    gap: 20px; /* Space between links */
-    flex: 1; /* Take up remaining space */
-    justify-content: center; /* Center links within container */
-    transform: translateX(-80px); /* Manually adjust position */
-    text-align: center;
-}
-.nav-links a {
-    text-decoration: none;
-    color: white;
-    font-size: 18px;
-    font-weight: 500; /* Slightly bold for better readability */
-    transition: color 0.3s ease; /* Smooth hover effect */
-}
+    button:hover {
+      background-color: #217a21;
+    }
 
-/* Hover effect on nav links */
-.nav-links a:hover {
-    color: #239931; /* Blue color on hover */
-}
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .profile-container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .profile-content {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      form {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Navbar -->
   <nav class="navbar">
     <div class="logo">
-        <a href="{% url 'home_page' %}">TegyHagz</a>
+      <a href="{% url 'home_page' %}">TegyHagz</a>
     </div>
     <div class="nav-links">
-        <a href="{% url 'main_page' %}">Home</a>
-        <a href="{% url 'book_page' %}">Booking</a>
-        <a href="#">Notification</a>
-        <a href="{% url 'user_profile' %}">Profile</a>
+      <a href="{% url 'main_page' %}">Home</a>
+      <a href="{% url 'book_page' %}">Booking</a>
+      <a href="#">Notification</a>
+      <a href="{% url 'user_profile' %}">Profile</a>
     </div>
+  </nav>
 
-    
-</nav>
+  <!-- Profile Container -->
   <div class="profile-container">
     <h1>User Profile</h1>
     <div class="profile-content">
+      <div class="profile-picture">
+        {% load static %}
+        <img src="{% static 'images/Elsehrawy.jpg' %}" alt="Profile Picture">
+      </div>
       <div class="profile-details">
         <div class="profile-item">
           <h2>Username</h2>
-          <p>Your current user name is: <strong>{{ request.user.username }}</strong></p>
+          <p>Your current username is: <strong>{{ request.user.username }}</strong></p>
         </div>
         <div class="profile-item">
           <h2>Email</h2>
@@ -153,30 +205,29 @@
           <p>Your current password is: <strong>*******</strong></p>
         </div>
       </div>
-      <div class="profile-picture">
-        {% load static %}
-        <img src="{% static 'images/Elsehrawy.jpg' %}" alt="Profile Picture">      </div>
     </div>
+
+    <!-- Change Username -->
     <div class="profile-item">
       <h2>Change Username</h2>
       <form method="POST" action="{% url 'change_username' %}">
-          {% csrf_token %}
-          <input type="text" name="new_username" placeholder="Enter new username" required>
-          <button type="submit">Update Username</button>
+        {% csrf_token %}
+        <input type="text" name="new_username" placeholder="Enter new username" required>
+        <button type="submit">Update Username</button>
       </form>
-  </div>
-  
-  <div class="profile-item">
+    </div>
+
+    <!-- Change Password -->
+    <div class="profile-item">
       <h2>Change Password</h2>
       <form method="POST" action="{% url 'change_password' %}">
-          {% csrf_token %}
-          <input type="password" name="old_password" placeholder="Current password" required>
-          <input type="password" name="new_password1" placeholder="New password" required>
-          <input type="password" name="new_password2" placeholder="Confirm new password" required>
-          <button type="submit">Update Password</button>
+        {% csrf_token %}
+        <input type="password" name="old_password" placeholder="Current password" required>
+        <input type="password" name="new_password1" placeholder="New password" required>
+        <input type="password" name="new_password2" placeholder="Confirm new password" required>
+        <button type="submit">Update Password</button>
       </form>
-  </div>
-      
+    </div>
   </div>
 </body>
 </html>

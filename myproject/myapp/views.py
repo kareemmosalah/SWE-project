@@ -456,3 +456,7 @@ def change_password(request):
         else:
             messages.error(request, "Password update failed. Please check the form.")
     return redirect('user_profile')
+
+
+
+
