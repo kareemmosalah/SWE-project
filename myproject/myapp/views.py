@@ -8,6 +8,9 @@ from django.contrib.auth import get_user_model, load_backend
 import requests
 import json
 
+from django.shortcuts import render, get_object_or_404
+from .models import Court
+
 # Sample data for notifications and profile
 sample_notifications = [
     {"title": "Booking Confirmed", "message": "Your booking at Court 1 is confirmed.", "read": False},
@@ -93,6 +96,7 @@ def book_page(request):
     """
     return render(request, 'Book_Page.html')
 
+
 from django.shortcuts import render, get_object_or_404
 from .models import Court
 
@@ -128,22 +132,38 @@ def courts_list(request):
 
     Returns:
         HttpResponse: The rendered HTML response containing the list of courts.
-
     """
     city = request.GET.get('city')
-    city_courts = {
-        'cairo': [
-            {'name': 'Court 1', 'id': 1},
-            {'name': 'Court 2', 'id': 2},
-        ],
-        'alexandria': [
-            {'name': 'Court 3', 'id': 3},
-            {'name': 'Court 4', 'id': 4},
-        ],
-    }
-    courts = city_courts.get(city, [])
+    print(city)  # Debug statement to check city data
+    courts = Court.objects.filter(city__icontains=city)
+    print(courts)  # Debug statement to check courts data
     context = {'city': city, 'courts': courts}
-    return render(request, 'Courts_List.html', context)
+    print(context)  # Debug statement to check context data
+    return render(request, 'Courts_List.html', context)# def courts_list(request):
+#     """
+#     View function that retrieves a list of courts based on the specified city.
+
+#     Args:
+#         request (HttpRequest): The HTTP request object.
+
+#     Returns:
+#         HttpResponse: The rendered HTML response containing the list of courts.
+
+#     """
+#     city = request.GET.get('city')
+#     city_courts = {
+#         'cairo': [
+#             {'name': 'Court 1', 'id': 1},
+#             {'name': 'Court 2', 'id': 2},
+#         ],
+#         'alexandria': [
+#             {'name': 'Court 3', 'id': 3},
+#             {'name': 'Court 4', 'id': 4},
+#         ],
+#     }
+#     courts = city_courts.get(city, [])
+#     context = {'city': city, 'courts': courts}
+#     return render(request, 'Courts_List.html', context)
 
 
 
