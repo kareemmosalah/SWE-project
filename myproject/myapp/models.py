@@ -21,15 +21,14 @@ class Court(models.Model):
 
     def __str__(self):
         return self.name
-    def __str__(self):
-        return self.name
-class Schedule(models.Model):
-    court = models.ForeignKey(Court, on_delete=models.CASCADE)
-    time = models.CharField(max_length=50)
-    status = models.CharField(max_length=20, default='Available')
+
+class CourtSchedule(models.Model):
+    court_id = models.ForeignKey(Court, on_delete=models.CASCADE)
+    time = models.CharField(max_length=20)
+    status = models.CharField(max_length=20)
 
     def __str__(self):
-        return f"{self.court.name} - {self.time}"
+        return f'Court {self.court.name} - {self.time} - {self.status}'
     
 class Datacsv(models.Model):  
     date = models.DateField()  

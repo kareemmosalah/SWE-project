@@ -139,54 +139,11 @@ def courts_list(request):
     print(courts)  
     context = {'city': city, 'courts': courts}
     print(context)  
-    return render(request, 'Courts_List.html', context)# def courts_list(request):
-#     """
-#     View function that retrieves a list of courts based on the specified city.
+    return render(request, 'Courts_List.html', context)
 
-#     Args:
-#         request (HttpRequest): The HTTP request object.
-
-#     Returns:
-#         HttpResponse: The rendered HTML response containing the list of courts.
-
-#     """
-#     city = request.GET.get('city')
-#     city_courts = {
-#         'cairo': [
-#             {'name': 'Court 1', 'id': 1},
-#             {'name': 'Court 2', 'id': 2},
-#         ],
-#         'alexandria': [
-#             {'name': 'Court 3', 'id': 3},
-#             {'name': 'Court 4', 'id': 4},
-#         ],
-#     }
-#     courts = city_courts.get(city, [])
-#     context = {'city': city, 'courts': courts}
-#     return render(request, 'Courts_List.html', context)
-
-
-
-def court_schedule(request, court_id):
-    """
-    View function to display the schedule for a specific court.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-        court_id (int): The ID of the court.
-
-    Returns:
-        HttpResponse: The HTTP response object containing the rendered template.
-
-    """
- 
-    schedule = court_schedules.get(court_id, [])
-    context = {'schedule': schedule, 'court_id': court_id}
-    return render(request, 'Court_schedule.html', context)
-
-
-# Assuming court_schedules is a global variable or can be fetched from a database
-
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import CourtSchedule
 
 def book_time(request, court_id):
     """
@@ -210,23 +167,117 @@ def book_time(request, court_id):
             messages.error(request, 'No time slot selected.')
             return redirect('court_schedule', court_id=court_id)
 
-        schedule = court_schedules.get(court_id, [])
-
-        for slot in schedule:
-            if slot['time'] == time_slot:
-                if slot['status'] == 'Available':
-                    slot['status'] = 'Booked'
-                    messages.success(request, f'Time slot "{time_slot}" booked successfully!')
-                else:
-                    messages.error(request, f'Time slot "{time_slot}" is already booked.')
-                break
-        else:
+        try:
+            slot = CourtSchedule.objects.get(court_id=court_id, time=time_slot)
+            if slot.status == 'Available':
+                slot.status = 'Booked'
+                slot.save()
+                messages.success(request, f'Time slot "{time_slot}" booked successfully!')
+            else:
+                messages.error(request, f'Time slot "{time_slot}" is already booked.')
+        except CourtSchedule.DoesNotExist:
             messages.error(request, f'Time slot "{time_slot}" not found.')
 
         # Pass updated schedule back to the template
+        schedule = CourtSchedule.objects.filter(court_id=court_id)
         return render(request, 'court_schedule.html', {'schedule': schedule, 'court_id': court_id})
 
     return redirect('court_schedule', court_id=court_id)
+
+def court_schedule(request, court_id):
+    """
+    View function to display the schedule for a specific court.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        court_id (int): The ID of the court.
+
+    Returns:
+        HttpResponse: The HTTP response object containing the rendered template.
+
+    """
+    schedule = CourtSchedule.objects.filter(court_id=court_id)
+    context = {'schedule': schedule, 'court_id': court_id}
+    return render(request, 'court_schedule.html', context)
+
+# from django.shortcuts import render
+# from .models import CourtSchedule
+
+# def court_schedule(request, court_id):
+#     """
+#     View function to display the schedule for a specific court.
+
+#     Args:
+#         request (HttpRequest): The HTTP request object.
+#         court_id (int): The ID of the court.
+
+#     Returns:
+#         HttpResponse: The HTTP response object containing the rendered template.
+
+#     """
+#     schedule = CourtSchedule.objects.filter(court_id=court_id)
+#     context = {'schedule': schedule, 'court_id': court_id}
+#     return render(request, 'Court_schedule.html', context)
+# # def court_schedule(request, court_id):
+# #     """
+# #     View function to display the schedule for a specific court.
+
+# #     Args:
+# #         request (HttpRequest): The HTTP request object.
+# #         court_id (int): The ID of the court.
+
+# #     Returns:
+# #         HttpResponse: The HTTP response object containing the rendered template.
+
+# #     """
+ 
+# #     schedule = court_schedules.get(court_id, [])
+# #     context = {'schedule': schedule, 'court_id': court_id}
+# #     return render(request, 'Court_schedule.html', context)
+
+
+# # Assuming court_schedules is a global variable or can be fetched from a database
+
+
+# def book_time(request, court_id):
+#     """
+#     View function to book a time slot for a court.
+
+#     Args:
+#         request (HttpRequest): The HTTP request object.
+#         court_id (int): The ID of the court.
+
+#     Returns:
+#         HttpResponse: The HTTP response object.
+
+#     Raises:
+#         None
+
+#     """
+#     if request.method == 'POST':
+#         time_slot = request.POST.get('time_slot')
+
+#         if not time_slot:
+#             messages.error(request, 'No time slot selected.')
+#             return redirect('court_schedule', court_id=court_id)
+
+#         schedule = court_schedules.get(court_id, [])
+
+#         for slot in schedule:
+#             if slot['time'] == time_slot:
+#                 if slot['status'] == 'Available':
+#                     slot['status'] = 'Booked'
+#                     messages.success(request, f'Time slot "{time_slot}" booked successfully!')
+#                 else:
+#                     messages.error(request, f'Time slot "{time_slot}" is already booked.')
+#                 break
+#         else:
+#             messages.error(request, f'Time slot "{time_slot}" not found.')
+
+#         # Pass updated schedule back to the template
+#         return render(request, 'court_schedule.html', {'schedule': schedule, 'court_id': court_id})
+
+#     return redirect('court_schedule', court_id=court_id)
 
 
 
