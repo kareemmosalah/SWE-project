@@ -6,12 +6,13 @@
   <title>Court Owner Dashboard</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'court_owner/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'css/view_court.css' %}">
   <style>
     body {
       font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #e9f5ff;
+      background-color: #f7f9fc;
       color: #333;
     }
 
@@ -20,21 +21,19 @@
       margin: 40px auto;
       padding: 20px;
       background-color: #ffffff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       border-radius: 10px;
     }
 
-    h1 {
+    h1, h2 {
       text-align: center;
       color: #2d87f0;
       margin-bottom: 20px;
     }
 
     h2 {
-      color: #2d87f0;
       font-weight: bold;
-      margin-bottom: 15px;
-      border-bottom: 3px solid #d1e8ff;
+      border-bottom: 2px solid #d1e8ff;
       padding-bottom: 5px;
     }
 
@@ -67,6 +66,7 @@
       border: none;
       cursor: pointer;
       font-weight: bold;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
@@ -97,6 +97,7 @@
       border-radius: 5px;
       font-size: 1rem;
       font-weight: bold;
+      transition: background-color 0.3s ease;
     }
 
     .action-buttons .profile-btn:hover {
@@ -134,7 +135,7 @@
         <label for="city">City:</label>
         <input type="text" id="city" name="city" placeholder="Enter city" required>
         <button type="submit">Add Court</button>
-    /form>    
+      </form>    
     </section>
     <section class="view-profits">
       <h2>Your Court Profits</h2>
@@ -142,20 +143,8 @@
         <p>Loading profits...</p>
       </div>
     </section>
-    <section class="view-courts">
-      <h2>Your Courts</h2>
-      {% for court in courts %}
-        <div>
-          <h3>{{ court.name }}</h3>
-          <p>Location: {{ court.location }}</p>
-          <p>Pricing: {{ court.pricing }}</p>
-          <p>Contact: {{ court.contact_phone }}</p>
-        </div>
-      {% empty %}
-        <p>No courts added yet.</p>
-      {% endfor %}
-    </section>
     <div class="action-buttons">
+    <a href="{% url 'view_courts' %}" class="profile-btn">View Your Courts</a>
     <a href="{% url 'user_profile' %}" class="profile-btn">Go to Profile</a>
     </div>
 </div>

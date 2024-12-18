@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html><html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Settings</title>
+   <link rel="stylesheet" href="{% static 'css/settings.css' %}">
+</head>
+<body>
+   <div class="container">
+       <h1>Settings</h1>
+       <div class="change-username">
+           <h2>Change Username</h2>
+           <form method="POST" action="{% url 'change_username' %}">
+               {% csrf_token %}
+               <input type="text" name="new_username" placeholder="New username" required>
+               <button type="submit">Update Username</button>
+           </form>
+       </div>
+       <div class="change-password">
+           <h2>Change Password</h2>
+           <form method="POST" action="{% url 'change_password' %}">
+               {% csrf_token %}
+               <input type="password" name="old_password" placeholder="Current password" required>
+               <input type="password" name="new_password1" placeholder="New password" required>
+               <input type="password" name="new_password2" placeholder="Confirm new password" required>
+               <button type="submit">Update Password</button>
+           </form>
+       </div>
+   </div>
+</body>
+</html>

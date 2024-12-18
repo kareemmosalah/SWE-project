@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html><html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Your Courts</title>
+   <link rel="stylesheet" href="{% static 'css/view_court.css' %}">
+</head>
+<body>
+   <div class="container">
+       <h1>Your Courts</h1>
+       {% for court in courts %}
+           <div>
+               <h3>{{ court.name }}</h3>
+               <p>Location: {{ court.location }}</p>
+               <p>Pricing: {{ court.pricing }}</p>
+               <p>Contact: {{ court.contact_phone }}</p>
+           </div>
+       {% empty %}
+           <p>No courts added yet.</p>
+       {% endfor %}
+   </div>
+</body>
+</html>

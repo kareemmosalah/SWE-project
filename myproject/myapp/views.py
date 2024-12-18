@@ -540,3 +540,11 @@ def chart(request):
     chart = fig.to_html()
     context = {'chart': chart, 'form': DateForm()}
     return render(request, 'myproject/myapp/templates/reportpage.html', context)
+
+def view_courts(request):
+
+    courts = Court.objects.filter(contact_email=request.user.email)
+    return render(request, 'view_courts.html', {'courts': courts})
+
+def settings_page(request):
+    return render(request, 'settings.html')
