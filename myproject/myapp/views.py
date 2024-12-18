@@ -298,31 +298,10 @@ def main_page(request):
 
 @login_required
 def user_profile(request):
-    """
-    Renders the user profile page for authenticated users.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: The rendered user profile page with the context containing the sample user profile.
-    """
     context = {"profile": sample_user_profile}
     return render(request, 'user_profile.html', context)
 
 def login_signup_page(request):
-    """
-    Handles the login and signup functionality for users.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: The rendered login/signup page with the appropriate context.
-
-    The function determines whether the user is attempting to log in or sign up based on the POST data.
-    It validates the form data and either logs the user in or creates a new user account.
-    """
     user_type = request.GET.get('user_type', 'player')  # Default to 'player'
 
     if request.method == "POST":
@@ -365,17 +344,6 @@ def login_signup_page(request):
     return render(request, 'login_signup.html', {'user_type': user_type})
 
 def court_owner_dashboard(request):
-    """
-    Renders the dashboard for court owners with their courts and total profit.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: The rendered owner dashboard page with the context containing the courts and total profit.
-
-    The function retrieves all courts owned by the logged-in user and calculates the total profit from bookings.
-    """
     courts = Court.objects.filter(owner=request.user)
     total_profit = sum(booking.amount_paid for booking in Booking.objects.filter(court__in=courts))
     context = {
@@ -414,17 +382,6 @@ def add_court(request):
 
 
 def view_profits(request):
-    """
-    Displays the total profit for the court owner from all their courts.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: The rendered view profits page with the context containing the total profit.
-
-    The function calculates the total profit from all bookings for the courts owned by the logged-in user.
-    """
     courts = Court.objects.filter(owner=request.user)
     total_profit = sum(booking.amount_paid for booking in Booking.objects.filter(court__in=courts))
     return render(request, 'court_owner/view_profits.html', {'total_profit': total_profit})
@@ -542,7 +499,6 @@ def chart(request):
     return render(request, 'myproject/myapp/templates/reportpage.html', context)
 
 def view_courts(request):
-
     courts = Court.objects.filter(contact_email=request.user.email)
     return render(request, 'view_courts.html', {'courts': courts})
 
