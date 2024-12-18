@@ -29,3 +29,7 @@ class CustomUserLoginForm(AuthenticationForm):
     class Meta:
         model = CustomUser
         fields = ('username', 'password')
+        
+class DateForm(forms.Form):
+    start = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    end = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))

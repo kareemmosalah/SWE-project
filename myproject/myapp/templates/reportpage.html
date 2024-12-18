@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plotly/Django</title>
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.6.0"></script>
+    <!-- Plotly -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+
+    <div class="container mt-4">
+        <form method="GET" action="{% url 'chart' %}">
+            {{ form.as_p }}
+            <button>Submit</button>
+        </form>
+        
+        {{ chart|safe }}
+
+        <!-- Download Button -->
+        <button id="download-btn">Download Graph</button>
+    </div>
+
+    <script>
+        document.getElementById('download-btn').addEventListener('click', function() {
+            var graphDiv = document.querySelector('.plotly-graph-div');
+            Plotly.downloadImage(graphDiv, {
+                format: 'png', // Choose the format: 'png', 'jpeg', 'webp', 'svg'
+                filename: 'plotly-graph'
+            });
+        });
+    </script>
+    
+</body>
+</html>

@@ -341,6 +341,7 @@ def add_court(request):
         name = request.POST['courtName']
         location = request.POST['location']
         price = request.POST['price']
+        city = request.POST['city']  # Ensure city is captured from the form
         contact_phone = request.user.username  # Use logged-in user's username
         contact_email = request.user.email     # Use logged-in user's email
 
@@ -349,6 +350,7 @@ def add_court(request):
             name=name,
             location=location,
             pricing=price,
+            city=city,  # Save city to the database
             contact_phone=contact_phone,
             contact_email=contact_email,
             details='Details not provided', 
@@ -459,5 +461,31 @@ def change_password(request):
     return redirect('user_profile')
 
 
+def chart(request):
+    start = request.GET.get('start')
+    end = request.GET.get('end')
 
+    data = Datacsv.objects.all()
 
+    if start:
+        data = data.filter(date__gte=start)
+    if end:
+        data = data.filter(date__lte=end)
+
+    fig = px.line(
+        x=[c.date for c in data],
+        y=[c.average for c in data],
+        title="Average profit per year",
+        labels={'x': 'Date', 'y': 'Profit'}
+    )
+
+    fig.update_layout(
+        title={
+            'font_size': 24,
+            'xanchor': 'center',
+            'x': 0.5
+        })
+    
+    chart = fig.to_html()
+    context = {'chart': chart, 'form': DateForm()}
+    return render(request, 'myproject/myapp/templates/reportpage.html', context)

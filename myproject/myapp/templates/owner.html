@@ -125,17 +125,16 @@
       <h2>Add New Court</h2>
       <form method="post" action="{% url 'add_court' %}">
         {% csrf_token %}
-        <label for="courtName">Court Name:</label>
+        <label forurtName">Court Name:</label>
         <input type="text" id="courtName" name="courtName" placeholder="Enter court name" required>
-    
         <label for="location">Location:</label>
         <input type="text" id="location" name="location" placeholder="Enter court location" required>
-    
         <label for="price">Price Per Hour:</label>
         <input type="number" id="price" name="price" placeholder="Enter price per hour" required>
-    
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" placeholder="Enter city" required>
         <button type="submit">Add Court</button>
-    </form>    
+    /form>    
     </section>
     <section class="view-profits">
       <h2>Your Court Profits</h2>
