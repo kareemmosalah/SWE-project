@@ -41,9 +41,8 @@ book_first_time_slot.click()
 Notification_page = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "/html/body/nav/div[2]/a[3]")))
 Notification_page.click()
 
-# new line 
+#new line  
 
 time.sleep(10)
 driver.quit()
-# Create your tests here.
 
