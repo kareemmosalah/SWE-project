@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from .forms import CustomUserCreationForm, CustomUserLoginForm
 from django.contrib.auth import get_user_model, load_backend
 import requests
@@ -10,6 +10,7 @@ import json
 from django.shortcuts import render, redirect
 from django.shortcuts import render, get_object_or_404
 from .models import Court
+from .models import CustomUser
 
 # Sample data for notifications and profile
 sample_notifications = [
@@ -211,85 +212,6 @@ def cancel_booking(request, court_id):
         return redirect('court_schedule', court_id=court_id)
     return redirect('court_schedule', court_id=court_id)
 
-# from django.shortcuts import render
-# from .models import CourtSchedule
-
-# def court_schedule(request, court_id):
-#     """
-#     View function to display the schedule for a specific court.
-
-#     Args:
-#         request (HttpRequest): The HTTP request object.
-#         court_id (int): The ID of the court.
-
-#     Returns:
-#         HttpResponse: The HTTP response object containing the rendered template.
-
-#     """
-#     schedule = CourtSchedule.objects.filter(court_id=court_id)
-#     context = {'schedule': schedule, 'court_id': court_id}
-#     return render(request, 'Court_schedule.html', context)
-# # def court_schedule(request, court_id):
-# #     """
-# #     View function to display the schedule for a specific court.
-
-# #     Args:
-# #         request (HttpRequest): The HTTP request object.
-# #         court_id (int): The ID of the court.
-
-# #     Returns:
-# #         HttpResponse: The HTTP response object containing the rendered template.
-
-# #     """
- 
-# #     schedule = court_schedules.get(court_id, [])
-# #     context = {'schedule': schedule, 'court_id': court_id}
-# #     return render(request, 'Court_schedule.html', context)
-
-
-# # Assuming court_schedules is a global variable or can be fetched from a database
-
-
-# def book_time(request, court_id):
-#     """
-#     View function to book a time slot for a court.
-
-#     Args:
-#         request (HttpRequest): The HTTP request object.
-#         court_id (int): The ID of the court.
-
-#     Returns:
-#         HttpResponse: The HTTP response object.
-
-#     Raises:
-#         None
-
-#     """
-#     if request.method == 'POST':
-#         time_slot = request.POST.get('time_slot')
-
-#         if not time_slot:
-#             messages.error(request, 'No time slot selected.')
-#             return redirect('court_schedule', court_id=court_id)
-
-#         schedule = court_schedules.get(court_id, [])
-
-#         for slot in schedule:
-#             if slot['time'] == time_slot:
-#                 if slot['status'] == 'Available':
-#                     slot['status'] = 'Booked'
-#                     messages.success(request, f'Time slot "{time_slot}" booked successfully!')
-#                 else:
-#                     messages.error(request, f'Time slot "{time_slot}" is already booked.')
-#                 break
-#         else:
-#             messages.error(request, f'Time slot "{time_slot}" not found.')
-
-#         # Pass updated schedule back to the template
-#         return render(request, 'court_schedule.html', {'schedule': schedule, 'court_id': court_id})
-
-#     return redirect('court_schedule', court_id=court_id)
-
 
 
 def main_page(request):
@@ -390,40 +312,6 @@ def view_profits(request):
     total_profit = sum(booking.amount_paid for booking in Booking.objects.filter(court__in=courts))
     return render(request, 'court_owner/view_profits.html', {'total_profit': total_profit})
 
-def send_notification(registration_ids, message_title, message_desc):
-    """
-    Sends a notification to the specified registration IDs using Firebase Cloud Messaging (FCM).
-
-    Args:
-        registration_ids (list): List of registration IDs to send the notification to.
-        message_title (str): The title of the notification message.
-        message_desc (str): The body of the notification message.
-
-    Returns:
-        None
-
-    The function constructs the payload with the provided message title and description,
-    and sends a POST request to the FCM API endpoint with the necessary headers.
-    """
-    fcm_api = "YOUR_SERVER_KEY"  # Replace with your actual FCM server key
-    url = "https://fcm.googleapis.com/fcm/send"
-
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f'key={fcm_api}'
-    }
-
-    payload = {
-        "registration_ids": registration_ids,
-        "priority": "high",
-        "notification": {
-            "body": message_desc,
-            "title": message_title,
-        }
-    }
-
-    result = requests.post(url, data=json.dumps(payload), headers=headers)
-    print(result.json())
 
 def notification_page(request):
     """
@@ -510,9 +398,6 @@ def view_courts(request):
 def settings_page(request):
     return render(request, 'settings.html')
 
-from django.contrib.auth import logout
-from django.shortcuts import redirect
-
 def logout_view(request):
     logout(request)
     return redirect('entry_page')
@@ -520,9 +405,52 @@ def logout_view(request):
 def home_page(request):
     return render(request, 'home.html')
 
+
+
 @login_required
 def admin_dashboard(request):
-    return render(request, 'Admin_Page.html')
+    # Get the selected city from the GET request
+    selected_city = request.GET.get('city', '')
+    
+    # Fetch courts based on the selected city, or all courts if no city is selected
+    if selected_city:
+        courts = Court.objects.filter(city=selected_city)
+    else:
+        courts = Court.objects.all()
+    
+    # Handle court deletion via POST request
+    if request.method == 'POST':
+        if 'court_id' in request.POST:
+            court_id = request.POST.get('court_id')
+            if Court.objects.filter(id=court_id).exists():
+                Court.objects.filter(id=court_id).delete()
+                messages.success(request, "Court deleted successfully!")
+            else:
+                messages.error(request, "Court not found.")
+        elif 'user_id' in request.POST:
+            user_id = request.POST.get('user_id')
+            if CustomUser.objects.filter(id=user_id).exists():
+                CustomUser.objects.filter(id=user_id).delete()
+                messages.success(request, "User deleted successfully!")
+            else:
+                messages.error(request, "User not found.")
+        return redirect('admin_dashboard')
+
+    # Get a list of unique cities for the dropdown
+    cities = Court.objects.values_list('city', flat=True).distinct()
+
+    # Fetch all users
+    users = CustomUser.objects.all()
+
+    # Pass data to the template
+    context = {
+        'courts': courts,
+        'cities': cities,
+        'selected_city': selected_city,
+        'users': users,
+    }
+    return render(request, 'admin_dashboard.html', context)
+
 from django.shortcuts import render
 import plotly.express as px
 from .utils import generate_fake_profits  
@@ -546,5 +474,3 @@ def owner_profits_view(request):
        'pie_chart': pie_fig.to_html(),
    }
    return render(request, 'owner_profits.html', context)
-
-

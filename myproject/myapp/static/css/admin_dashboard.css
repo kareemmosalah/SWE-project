@@ -59,6 +59,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 }
+
 .sign-out-btn {
     margin-right: 100px; /* Pushes the sign-out button to the far right */
     color: red;
@@ -68,7 +69,54 @@ body {
 .sign-out-btn:hover {
     color: darkred; /* Darker red on hover */
 }
-h1, h2 {
+
+h1 {
+    text-align: center;
+    color: #2d87f0;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.reservations {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.reservation-item {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.delete-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #d32f2f;
+}
+
+h2 {
     text-align: center;
     color: #2d87f0;
     margin-bottom: 20px;
@@ -87,4 +135,32 @@ h1, h2 {
 .admin-section p {
     font-size: 1rem;
     color: #555;
+}
+
+.users-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two squares in width */
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.user-item {
+    background-color: #f9f9f9;
+    padding: 20px; /* Increase padding to make squares bigger */
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative; /* For positioning the delete button */
+}
+
+.user-item .delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
 }

@@ -35,4 +35,3 @@ urlpatterns = [
     # path('owner/', views.court_owner_dashboard, name='court_owner_dashboard'),
     # path('change-profile-photo/', views.change_profile_photo, name='change_profile_photo'),  # New URL
 ]
-

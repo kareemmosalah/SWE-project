@@ -29,16 +29,49 @@
   </nav>
   <div class="admin-container">
     <h1>Admin Dashboard</h1>
-    <section class="admin-section">
-      <h2>Manage Users</h2>
-      <p>Here you can manage users.</p>
-      <!-- Add more admin functionalities as needed -->
-    </section>
-    <section class="admin-section">
-      <h2>Manage Courts</h2>
-      <p>Here you can manage courts.</p>
-      <!-- Add more admin functionalities as needed -->
-    </section>
+    <form method="get" action="{% url 'admin_dashboard' %}">
+      <label for="city">Select City:</label>
+      <select name="city" id="city" onchange="this.form.submit()">
+        <!-- Static options -->
+        <option value="" {% if not selected_city or selected_city == "" %}selected{% endif %}>All Cities</option>
+
+        
+        <!-- Dynamic options from the `cities` list -->
+        {% for city in cities %}
+          <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>{{ city }}</option>
+        {% endfor %}
+      </select>
+    </form>
+    <div class="reservations">
+      {% for court in courts %}
+        <div class="reservation-item">
+          <p><strong>Court:</strong> {{ court.name }}</p>
+          <p><strong>Location:</strong> {{ court.city }}</p>
+          <p><strong>User Type:</strong> {% if user.is_admin %}Admin{% elif user.is_court_owner %}Court Owner{% elif user.is_player %}Player{% endif %}</p>
+          <form method="post" action="{% url 'admin_dashboard' %}">
+            {% csrf_token %}
+            <input type="hidden" name="court_id" value="{{ court.id }}">
+            <button type="submit" class="delete-btn">Delete Court</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- New section for listing users in squares -->
+    <div class="users-grid">
+      {% for user in users %}
+        <div class="user-item">
+          <p><strong>Username:</strong> {{ user.username }}</p>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>User Type:</strong> {% if user.is_admin %}Admin{% elif user.is_court_owner %}Court Owner{% elif user.is_player %}Player{% endif %}</p>
+          <form method="post" action="{% url 'admin_dashboard' %}">
+            {% csrf_token %}
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <button type="submit" class="delete-btn">Delete User</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
   </div>
 </body>
 </html>
