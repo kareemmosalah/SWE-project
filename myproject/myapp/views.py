@@ -7,7 +7,7 @@ from .forms import CustomUserCreationForm, CustomUserLoginForm
 from django.contrib.auth import get_user_model, load_backend
 import requests
 import json
-
+from django.shortcuts import render, redirect
 from django.shortcuts import render, get_object_or_404
 from .models import Court
 
@@ -336,7 +336,7 @@ def login_signup_page(request):
             else:
                 messages.error(request, "Login failed. Please check your input.")
                 
-        elif action == "signup":
+        elif action == "Signup":
             form = CustomUserCreationForm(request.POST)
             if form.is_valid():
                 user = form.save(commit=False)

@@ -1,3 +1,4 @@
+
 {% load static %}
 {% load socialaccount %}
 
@@ -18,43 +19,37 @@
         </div>
 
         <!-- Forms -->
-        <form method="post">
+        <form id="login-form" method="post" style="display: block;">
             {% csrf_token %}
             <input type="hidden" name="user_type" value="{{ user_type }}">
-
-            <!-- Login Form -->
-            <div id="login-form">
-                <input type="text" name="username" placeholder="USERNAME" class="input-field" required>
-                <input type="password" name="password" placeholder="PASSWORD" class="input-field" required>
-                <button type="submit" name="action" value="Login" class="btn">SIGN IN</button>
-                <a href="{% provider_login_url 'google' %}?next=/main&prompt=select_account" class="btn google-login-button">
-                    Login with Google
-                </a>
-            </div>
-
-            <!-- Signup Form -->
-            <div id="signup-form">
-                <input type="text" name="username" placeholder="USERNAME" class="input-field" required>
-                <input type="email" name="email" placeholder="EMAIL" class="input-field" required>
-                <input type="password" name="password1" placeholder="PASSWORD" class="input-field" required>
-                <input type="password" name="password2" placeholder="CONFIRM PASSWORD" class="input-field" required>
-                <button type="submit" name="action" value="signup" class="btn">SIGN UP</button>
-                <a href="{% provider_login_url 'google' %}?next=/main&prompt=select_account" class="btn google-login-button">
-                    Sign up with Google
-                </a>
-
-                
-            </div>
-            <div>
-                <a href="{% url 'main_page' %}" >Continue as Guest</a>
-                </div>
-            
+            <input type="hidden" name="action" value="Login">
+            <input type="text" name="username" placeholder="USERNAME" class="input-field" required>
+            <input type="password" name="password" placeholder="PASSWORD" class="input-field" required>
         </form>
-        
-        
 
-        <!-- Continue as Guest -->
-    
+        <form id="signup-form" method="post" style="display: none;">
+            {% csrf_token %}
+            <input type="hidden" name="user_type" value="{{ user_type }}">
+            <input type="hidden" name="action" value="Signup">
+            <input type="text" name="username" placeholder="USERNAME" class="input-field" required>
+            <input type="email" name="email" placeholder="EMAIL" class="input-field" required>
+            <input type="password" name="password1" placeholder="PASSWORD" class="input-field" required>
+            <input type="password" name="password2" placeholder="CONFIRM PASSWORD" class="input-field" required>
+        </form>
+
+        <!-- Buttons -->
+        <div class="buttons">
+            <button id="sign-in-btn" type="button" onclick="submitLoginForm()" class="btn">SIGN IN</button>
+            <button id="sign-up-btn" type="button" onclick="submitSignupForm()" class="btn" style="display: none;">SIGN UP</button>
+            <a id="google-login-btn" href="{% provider_login_url 'google' %}?next=/main&prompt=select_account" class="btn google-login-button">
+                Login with Google
+            </a>
+            <a id="google-signup-btn" href="{% provider_login_url 'google' %}?next=/main&prompt=select_account" class="btn google-login-button" style="display: none;">
+                Sign up with Google
+            </a>
+            <a href="{% url 'main_page' %}">Continue as Guest</a>
+        </div>
+
         <!-- Messages -->
         {% if messages %}
             <ul class="messages">
@@ -64,26 +59,38 @@
             </ul>
         {% endif %}
     </div>
-    
-    
 
-    <!-- JavaScript for Form Toggle -->
+    <!-- JavaScript for Form Toggle and Submission -->
     <script>
         function showForm(type) {
             const loginTab = document.querySelector('.tabs span:nth-child(1)');
             const signupTab = document.querySelector('.tabs span:nth-child(2)');
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const signInBtn = document.getElementById('sign-in-btn');
+            const signUpBtn = document.getElementById('sign-up-btn');
+            const googleLoginBtn = document.getElementById('google-login-btn');
+            const googleSignupBtn = document.getElementById('google-signup-btn');
 
-            // Toggle visibility of forms
-            document.getElementById('login-form').style.display = type === 'login' ? 'block' : 'none';
-            document.getElementById('signup-form').style.display = type === 'signup' ? 'block' : 'none';
-
-            // Update tab classes
+            // Toggle visibility of forms and buttons
             if (type === 'login') {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+                signInBtn.style.display = 'inline-block';
+                signUpBtn.style.display = 'none';
+                googleLoginBtn.style.display = 'inline-block';
+                googleSignupBtn.style.display = 'none';
                 loginTab.classList.add('active-tab');
                 loginTab.classList.remove('inactive-tab');
                 signupTab.classList.add('inactive-tab');
                 signupTab.classList.remove('active-tab');
             } else {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+                signInBtn.style.display = 'none';
+                signUpBtn.style.display = 'inline-block';
+                googleLoginBtn.style.display = 'none';
+                googleSignupBtn.style.display = 'inline-block';
                 signupTab.classList.add('active-tab');
                 signupTab.classList.remove('inactive-tab');
                 loginTab.classList.add('inactive-tab');
@@ -91,12 +98,19 @@
             }
         }
 
+        function submitLoginForm() {
+            document.getElementById('login-form').submit();
+        }
+
+        function submitSignupForm() {
+            document.getElementById('signup-form').submit();
+        }
+
         // Ensure the login form is shown by default if user_type is 'player'
         document.addEventListener('DOMContentLoaded', function() {
             showForm('login');
         });
     </script>
-   
 </body>
-
 </html>
+
