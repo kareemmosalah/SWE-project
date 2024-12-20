@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+    ///kkakjndnaeinnu
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,7 +21,7 @@
             {% if user.is_authenticated %}
                 {% if user.is_court_owner %}
                     <a href="{% url 'court_owner_dashboard' %}">Owner Page</a>
-                    
+
                 {% elif user.is_admin %}
                     <a href="{% url 'admin_dashboard' %}">Admin Page</a>
                 {% endif %}
