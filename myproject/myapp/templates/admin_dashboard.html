@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">
+        <a href="{% url 'home_page' %}">Tegy Hagz</a>
+    </div>
+    <div class="nav-links">
+        <a href="{% url 'main_page' %}">Home</a>
+        <a href="{% url 'book_page' %}">Booking</a>
+        <a href="{% url 'notification' %}">Notification</a>
+        <a href="{% url 'user_profile' %}">Profile</a>
+        {% if user.is_authenticated %}
+            {% if user.is_court_owner %}
+                <a href="{% url 'court_owner_dashboard' %}">Owner Page</a>
+            {% elif user.is_admin %}
+                <a href="{% url 'admin_dashboard' %}">Admin Page</a>
+            {% endif %}
+            <a href="{% url 'logout' %}" class="sign-out-btn">Sign Out</a>
+        {% endif %}
+    </div>
+  </nav>
+  <div class="admin-container">
+    <h1>Admin Dashboard</h1>
+    <section class="admin-section">
+      <h2>Manage Users</h2>
+      <p>Here you can manage users.</p>
+      <!-- Add more admin functionalities as needed -->
+    </section>
+    <section class="admin-section">
+      <h2>Manage Courts</h2>
+      <p>Here you can manage courts.</p>
+      <!-- Add more admin functionalities as needed -->
+    </section>
+  </div>
+</body>
+</html>

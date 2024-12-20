@@ -8,7 +8,7 @@ class CustomUser(AbstractUser):
     """
     is_admin = models.BooleanField(default=False)  # Indicates if the user is an admin
     is_player = models.BooleanField(default=False)  # Indicates if the user is a player
-
+    is_court_owner = models.BooleanField(default=False)  # Indicates if the user is a court owner
 class Court(models.Model):
     name = models.CharField(max_length=100)
     details = models.TextField()

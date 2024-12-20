@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,43 +7,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notification Page</title>
+    <link rel="stylesheet" href="{% static 'css/Notification.css' %}">
     <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-messaging.js"></script>
+</head>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-
-        .notification-container {
-            text-align: center;
-            background: #ffffff;
-            padding: 20px 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            color: #333;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        p {
-            color: #666;
-            font-size: 16px;
-            margin: 0;
-        }
-    </style>
-
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{% url 'home_page' %}">Tegy Hagz</a>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'main_page' %}">Home</a>
+            <a href="{% url 'book_page' %}">Booking</a>
+            <a href="{% url 'notification' %}">Notification</a>
+            <a href="{% url 'user_profile' %}">Profile</a>
+            {% if user.is_authenticated %}
+                {% if user.is_court_owner %}
+                    <a href="{% url 'court_owner_dashboard' %}">Owner Page</a>
+                {% elif user.is_admin %}
+                    <a href="{% url 'admin_dashboard' %}">Admin Page</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </nav>
+    <div class="notification-container">
+        <h1>Notification Page</h1>
+        <p>Click inspect to find the key in the console logs.</p>
+    </div>
     <script>
         var firebaseConfig = {
             apiKey: "AIzaSyD-Qvpmlec1yGj3Om2fumMRDWrWT_hEZSY",
@@ -82,13 +75,6 @@
             console.log('Message received. ', payload);
         });
     </script>
-</head>
-
-<body>
-    <div class="notification-container">
-        <h1>Notification Page</h1>
-        <p>Click inspect to find the key in the console logs.</p>
-    </div>
 </body>
 
 </html>

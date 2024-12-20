@@ -1,194 +1,39 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Profile</title>
-  <style>
-    /* Global Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
-      line-height: 1.6;
-    }
-
-    /* Navbar */
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #111;
-      padding: 15px 30px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .navbar .logo a {
-      font-size: 1.8rem;
-      color: #29a829;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 20px;
-    }
-
-    .nav-links a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 1rem;
-      transition: color 0.3s ease;
-    }
-
-    .nav-links a:hover {
-      color: #29a829;
-    }
-
-    /* Profile Container */
-    .profile-container {
-      max-width: 900px;
-      margin: 50px auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    h1 {
-      font-size: 2rem;
-      text-align: center;
-      margin-bottom: 20px;
-      color: #333;
-    }
-
-    .profile-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 20px;
-    }
-
-    .profile-picture img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #29a829;
-    }
-
-    .profile-details {
-      width: 100%;
-      text-align: left;
-    }
-
-    .profile-item {
-      margin: 15px 0;
-    }
-
-    .profile-item h2 {
-      font-size: 1.2rem;
-      margin-bottom: 5px;
-      color: #555;
-    }
-
-    .profile-item p {
-      font-size: 1rem;
-      color: #333;
-    }
-
-    strong {
-      font-weight: bold;
-      color: #000;
-    }
-
-    /* Forms */
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-    }
-
-    input {
-      padding: 10px;
-      font-size: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      outline: none;
-      transition: border-color 0.3s ease;
-    }
-
-    input:focus {
-      border-color: #29a829;
-    }
-
-    button {
-      padding: 10px;
-      font-size: 1rem;
-      background-color: #29a829;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #217a21;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .profile-container {
-        padding: 20px;
-      }
-
-      h1 {
-        font-size: 1.8rem;
-      }
-
-      .profile-content {
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      form {
-        width: 100%;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="{% static 'css/user_profile.css' %}">
 </head>
 <body>
   <!-- Navbar -->
   <nav class="navbar">
     <div class="logo">
-      <a href="{% url 'home_page' %}">TegyHagz</a>
+        <a href="{% url 'home_page' %}">Tegy Hagz</a>
     </div>
     <div class="nav-links">
-      <a href="{% url 'main_page' %}">Home</a>
-      <a href="{% url 'book_page' %}">Booking</a>
-      <a href="#">Notification</a>
-      <a href="{% url 'user_profile' %}">Profile</a>
+        <a href="{% url 'main_page' %}">Home</a>
+        <a href="{% url 'book_page' %}">Booking</a>
+        <a href="{% url 'notification' %}">Notification</a>
+        <a href="{% url 'user_profile' %}">Profile</a>
+        {% if user.is_authenticated %}
+            {% if user.is_court_owner %}
+                <a href="{% url 'court_owner_dashboard' %}">Owner Page</a>
+            {% elif user.is_admin %}
+                <a href="{% url 'admin_dashboard' %}">Admin Page</a>
+            {% endif %}
+        {% endif %}
     </div>
-  </nav>
+</nav>
 
   <!-- Profile Container -->
   <div class="profile-container">
     <h1>User Profile</h1>
     <div class="profile-content">
       <div class="profile-picture">
-        {% load static %}
         <img src="{% static 'images/Elsehrawy.jpg' %}" alt="Profile Picture">
       </div>
       <div class="profile-details">
@@ -201,8 +46,20 @@
           <p>Your current email is: <strong>{{ request.user.email }}</strong></p>
         </div>
         <div class="profile-item">
-          <h2>Password</h2>
-          <p>Your current password is: <strong>*******</strong></p>
+          <h2>User Type</h2>
+          <p>Your user type is: 
+            <strong>
+              {% if request.user.is_court_owner %}
+                Court Owner
+              {% elif request.user.is_admin %}
+                Admin
+              {% elif request.user.is_player %}
+                Player
+              {% else %}
+                Unknown
+              {% endif %}
+            </strong>
+          </p>
         </div>
       </div>
     </div>
@@ -210,7 +67,8 @@
     <!-- Change Username -->
     <div class="action-buttons">
       <a href="{% url 'settings_page' %}" class="settings-btn">Settings</a>
-  </div>
+      <a href="{% url 'logout' %}" class="settings-btn">Sign Out</a>
+    </div>
   </div>
 </body>
 </html>

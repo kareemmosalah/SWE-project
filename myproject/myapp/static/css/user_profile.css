@@ -1,0 +1,179 @@
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: rgba(0, 0, 0, 0.9); /* Slightly darker transparent background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+    position: sticky;
+    top: 0; /* Stick to the top on scroll */
+    z-index: 1000; /* Ensure navbar is on top */
+}
+
+/* Logo styling */
+.logo a {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #239931; /* Bright blue for logo text */
+    text-decoration: none;
+    transition: color 0.3s ease; /* Smooth hover transition */
+}
+
+.logo a:hover {
+    color: #0f6f28; /* Slightly darker blue on hover */
+}
+
+/* Nav links container */
+.nav-links {
+    display: flex;
+    gap: 20px; /* Space between links */
+    flex: 1; /* Take up remaining space */
+    justify-content: center; /* Center links within container */
+    transform: translateX(-80px); /* Manually adjust position */
+    text-align: center;
+}
+
+/* Individual nav links */
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-weight: 500; /* Slightly bold for better readability */
+    transition: color 0.3s ease; /* Smooth hover effect */
+}
+
+/* Hover effect on nav links */
+.nav-links a:hover {
+    color: #239931; /* Blue color on hover */
+}
+
+/* Profile Container */
+.profile-container {
+    max-width: 900px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+}
+
+.profile-picture img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #29a829;
+}
+
+.profile-details {
+    width: 100%;
+    text-align: left;
+}
+
+.profile-item {
+    margin: 15px 0;
+}
+
+.profile-item h2 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.profile-item p {
+    font-size: 1rem;
+    color: #333;
+}
+
+strong {
+    font-weight: bold;
+    color: #000;
+}
+
+/* Forms */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    border-color: #29a829;
+}
+
+button {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #29a829;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #217a21;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .profile-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    form {
+        width: 100%;
+    }
+}

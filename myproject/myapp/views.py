@@ -327,7 +327,9 @@ def login_signup_page(request):
 
                 # Authenticate user
                 user = authenticate(username=username, password=password)
-                if user and ((user.is_player and user_type == 'player') or (user.is_admin and user_type == 'admin')):
+                if user and ((user.is_player and user_type == 'player') or 
+                             (user.is_admin and user_type == 'admin') or 
+                             (user.is_court_owner and user_type == 'court_owner')):
                     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                     messages.success(request, f"Welcome back, {user.username}!")
                     return redirect('main_page')
@@ -335,13 +337,13 @@ def login_signup_page(request):
                     messages.error(request, "Invalid credentials or incorrect user type.")
             else:
                 messages.error(request, "Login failed. Please check your input.")
-                
         elif action == "Signup":
             form = CustomUserCreationForm(request.POST)
             if form.is_valid():
                 user = form.save(commit=False)
                 user.is_player = user_type == 'player'
                 user.is_admin = user_type == 'admin'
+                user.is_court_owner = user_type == 'court_owner'
                 user.save()
                 login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 messages.success(request, "Account created successfully!")
@@ -507,3 +509,17 @@ def view_courts(request):
 
 def settings_page(request):
     return render(request, 'settings.html')
+
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
+def logout_view(request):
+    logout(request)
+    return redirect('entry_page')
+
+def home_page(request):
+    return render(request, 'home.html')
+
+@login_required
+def admin_dashboard(request):
+    return render(request, 'admin_dashboard.html')
