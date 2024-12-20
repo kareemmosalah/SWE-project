@@ -6,6 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Court Schedule</title>
     <link rel="stylesheet" href="{% static 'css/court_schedule.css' %}">
+    <style>
+        .cancel-button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -48,7 +57,11 @@
                             <button type="submit" class="book-button">Book</button>
                         </form>
                         {% else %}
-                        <button disabled>Booked</button>
+                        <form method="post" action="{% url 'cancel_booking' court_id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="time_slot" value="{{ slot.time }}">
+                            <button type="submit" class="cancel-button">Cancel Booking</button>
+                        </form>
                         {% endif %}
                     </td>
                 </tr>

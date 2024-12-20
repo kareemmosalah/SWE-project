@@ -200,6 +200,17 @@ def court_schedule(request, court_id):
     context = {'schedule': schedule, 'court_id': court_id}
     return render(request, 'court_schedule.html', context)
 
+
+def cancel_booking(request, court_id):
+    if request.method == 'POST':
+        time_slot = request.POST.get('time_slot')
+        court_schedule = get_object_or_404(CourtSchedule, court_id=court_id, time=time_slot)
+        court_schedule.status = 'Available'
+        court_schedule.save()
+        messages.success(request, 'Booking cancelled successfully.')
+        return redirect('court_schedule', court_id=court_id)
+    return redirect('court_schedule', court_id=court_id)
+
 # from django.shortcuts import render
 # from .models import CourtSchedule
 
@@ -343,15 +354,6 @@ def login_signup_page(request):
 
     return render(request, 'login_signup.html', {'user_type': user_type})
 
-def court_owner_dashboard(request):
-    courts = Court.objects.filter(owner=request.user)
-    total_profit = sum(booking.amount_paid for booking in Booking.objects.filter(court__in=courts))
-    context = {
-        'courts': courts,
-        'total_profit': total_profit,
-    }
-    return render(request, 'owner.html', context)
-
 from .models import Court
 
 
@@ -436,6 +438,7 @@ def notification_page(request):
     return render(request, 'Notification.html')
 
 from .models import Court
+
 def court_owner_dashboard(request):
     courts = Court.objects.filter(contact_email=request.user.email)
     context = {'courts': courts}
