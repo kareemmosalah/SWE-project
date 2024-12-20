@@ -5,10 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Court Owner Dashboard</title>
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'court_owner/styles.css' %}">
-  <link rel="stylesheet" href="{% static 'css/view_court.css' %}">
   <link rel="stylesheet" href="{% static 'css/owner.css' %}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
   <nav class="navbar">
@@ -28,30 +26,38 @@
             {% endif %}
         {% endif %}
     </div>
-</nav>
+  </nav>
   <div class="owner-container">
     <h1>Court Owner Dashboard</h1>
     <section class="add-court">
-      <h2>Add New Court</h2>
+      <h2><i class="fas fa-plus-circle"></i> Add New Court</h2>
       <form method="post" action="{% url 'add_court' %}">
         {% csrf_token %}
-        <label for="courtName">Court Name:</label>
-        <input type="text" id="courtName" name="courtName" placeholder="Enter court name" required>
-        <label for="location">Location:</label>
-        <input type="text" id="location" name="location" placeholder="Enter court location" required>
-        <label for="price">Price Per Hour:</label>
-        <input type="number" id="price" name="price" placeholder="Enter price per hour" required>
-        <label for="city">City:</label>
-        <input type="text" id="city" name="city" placeholder="Enter city" required>
-        <button type="submit">Add Court</button>
-      </form>    
+        <div class="form-group">
+          <label for="courtName"><i class="fas fa-building"></i> Court Name:</label>
+          <input type="text" id="courtName" name="courtName" placeholder="Enter court name" required>
+        </div>
+        <div class="form-group">
+          <label for="location"><i class="fas fa-map-marker-alt"></i> Location:</label>
+          <input type="text" id="location" name="location" placeholder="Enter court location" required>
+        </div>
+        <div class="form-group">
+          <label for="price"><i class="fas fa-dollar-sign"></i> Price Per Hour:</label>
+          <input type="number" id="price" name="price" placeholder="Enter price per hour" required>
+        </div>
+        <div class="form-group">
+          <label for="city"><i class="fas fa-city"></i> City:</label>
+          <input type="text" id="city" name="city" placeholder="Enter city" required>
+        </div>
+        <button type="submit" class="primary-btn">Add Court</button>
+      </form>
     </section>
     <div class="action-buttons">
-    <a href="{% url 'view_courts' %}" class="profile-btn">View Your Courts</a>
-    <a href="{% url 'user_profile' %}" class="profile-btn">Go to Profile</a>
-    <a href="{% url 'owner_profits' %}" class="profile-btn">View Profits</a>
+      <a href="{% url 'view_courts' %}" class="profile-btn"><i class="fas fa-list"></i> View Your Courts</a>
+      <a href="{% url 'user_profile' %}" class="profile-btn"><i class="fas fa-user"></i> Go to Profile</a>
+      <a href="{% url 'owner_profits' %}" class="profile-btn"><i class="fas fa-chart-line"></i> View Profits</a>
     </div>
-</div>
-<script src="{% static 'court_owner/owner.js' %}"></script>
+  </div>
+  <script src="{% static 'js/owner.js' %}"></script>
 </body>
 </html>

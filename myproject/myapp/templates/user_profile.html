@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Profile</title>
   <link rel="stylesheet" href="{% static 'css/user_profile.css' %}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
   <!-- Navbar -->
@@ -27,7 +27,7 @@
             {% endif %}
         {% endif %}
     </div>
-</nav>
+  </nav>
 
   <!-- Profile Container -->
   <div class="profile-container">
@@ -38,15 +38,15 @@
       </div>
       <div class="profile-details">
         <div class="profile-item">
-          <h2>Username</h2>
+          <h2><i class="fas fa-user"></i> Username</h2>
           <p>Your current username is: <strong>{{ request.user.username }}</strong></p>
         </div>
         <div class="profile-item">
-          <h2>Email</h2>
+          <h2><i class="fas fa-envelope"></i> Email</h2>
           <p>Your current email is: <strong>{{ request.user.email }}</strong></p>
         </div>
         <div class="profile-item">
-          <h2>User Type</h2>
+          <h2><i class="fas fa-user-tag"></i> User Type</h2>
           <p>Your user type is: 
             <strong>
               {% if request.user.is_court_owner %}
@@ -64,11 +64,12 @@
       </div>
     </div>
 
-    <!-- Change Username -->
+    <!-- Action Buttons -->
     <div class="action-buttons">
-      <a href="{% url 'settings_page' %}" class="settings-btn">Settings</a>
-      <a href="{% url 'logout' %}" class="settings-btn">Sign Out</a>
+      <a href="{% url 'settings_page' %}" class="settings-btn"><i class="fas fa-cog"></i> Settings</a>
+      <a href="{% url 'logout' %}" class="signout-btn"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
     </div>
   </div>
+  <script src="{% static 'js/user_profile.js' %}"></script>
 </body>
 </html>

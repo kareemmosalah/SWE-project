@@ -1,8 +1,8 @@
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Poppins', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f7f9fc;
+    background: linear-gradient(to bottom, #e9f5ff, #f7f9fc);
     color: #333;
 }
 
@@ -11,149 +11,144 @@ body {
     display: flex;
     align-items: center;
     padding: 15px 30px;
-    background-color: rgba(0, 0, 0, 0.9); /* Slightly darker transparent background */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+    background: #000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     position: sticky;
-    top: 0; /* Stick to the top on scroll */
-    z-index: 1000; /* Ensure navbar is on top */
+    top: 0;
+    z-index: 1000;
 }
 
-/* Logo styling */
 .logo a {
     font-size: 28px;
     font-weight: bold;
     text-transform: uppercase;
-    color: #239931; /* Bright blue for logo text */
+    color: #4caf50;
     text-decoration: none;
-    transition: color 0.3s ease; /* Smooth hover transition */
+    transition: color 0.3s;
 }
 
 .logo a:hover {
-    color: #0f6f28; /* Slightly darker blue on hover */
+    color: #2e7d32;
 }
 
-/* Nav links container */
 .nav-links {
     display: flex;
-    gap: 20px; /* Space between links */
-    flex: 1; /* Take up remaining space */
-    justify-content: center; /* Center links within container */
-    transform: translateX(-80px); /* Manually adjust position */
-    text-align: center;
+    gap: 20px;
+    flex: 1;
+    justify-content: center;
 }
 
-/* Individual nav links */
 .nav-links a {
     text-decoration: none;
     color: white;
     font-size: 18px;
-    font-weight: 500; /* Slightly bold for better readability */
-    transition: color 0.3s ease; /* Smooth hover effect */
+    font-weight: 500;
+    transition: color 0.3s;
 }
 
-/* Hover effect on nav links */
 .nav-links a:hover {
-    color: #239931; /* Blue color on hover */
+    color: #4caf50;
 }
 
+/* Dashboard Container */
 .owner-container {
-    max-width: 900px;
+    max-width: 800px;
     margin: 40px auto;
     padding: 20px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 h1, h2 {
     text-align: center;
-    color: #2d87f0;
+    color: #007bff;
     margin-bottom: 20px;
 }
 
 h2 {
+    font-size: 1.5rem;
     font-weight: bold;
-    border-bottom: 2px solid #d1e8ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-bottom: 2px solid #e0f2ff;
     padding-bottom: 5px;
 }
 
+/* Form Styles */
 form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
 }
 
 label {
     font-weight: bold;
     color: #555;
+    margin-bottom: 5px;
 }
 
-input, button {
+input {
     padding: 12px;
     font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    transition: 0.3s;
+    background: #f9f9f9;
 }
 
 input:focus {
-    border-color: #2d87f0;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
     outline: none;
 }
 
 button {
-    background-color: #2d87f0;
-    color: white;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 8px;
     border: none;
+    background: linear-gradient(to right, #007bff, #0056b3);
+    color: white;
     cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    transition: background 0.3s, transform 0.3s;
 }
 
 button:hover {
-    background-color: #1c66cc;
+    background: linear-gradient(to right, #0056b3, #003f91);
+    transform: translateY(-2px);
 }
 
-.view-profits {
-    margin-top: 30px;
-}
-
-#profitsContainer p {
-    font-size: 1.1rem;
-    color: #444;
-    margin: 10px 0;
-}
-
+/* Action Buttons */
 .action-buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
-.action-buttons .profile-btn {
-    background-color: #4caf50;
-    color: white;
-    text-decoration: none;
+.profile-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     padding: 10px 15px;
-    border-radius: 5px;
     font-size: 1rem;
     font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-.action-buttons .profile-btn:hover {
-    background-color: #45a049;
-}
-
-footer {
-    background-color: #2d87f0;
     color: white;
-    text-align: center;
-    padding: 10px;
-    margin-top: 40px;
+    background: #4caf50;
+    text-decoration: none;
     border-radius: 8px;
+    transition: background 0.3s, transform 0.3s;
 }
 
-footer p {
-    margin: 0;
-    font-size: 0.9rem;
+.profile-btn:hover {
+    background: #388e3c;
+    transform: translateY(-2px);
 }

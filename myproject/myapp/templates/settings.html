@@ -1,32 +1,48 @@
 {% load static %}
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Settings</title>
    <link rel="stylesheet" href="{% static 'css/settings.css' %}">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
    <div class="container">
        <h1>Settings</h1>
-       <div class="change-username">
-           <h2>Change Username</h2>
+       <div class="card username-card">
+           <h2><i class="fas fa-user-cog"></i> Change Username</h2>
            <form method="POST" action="{% url 'change_username' %}">
                {% csrf_token %}
-               <input type="text" name="new_username" placeholder="New username" required>
-               <button type="submit">Update Username</button>
+               <div class="input-group username-input">
+                   <input type="text" name="new_username" id="username" placeholder="New username" required>
+                   <i class="fas fa-user-edit"></i>
+               </div>
+               <button type="submit" class="username-btn">Update Username</button>
            </form>
        </div>
-       <div class="change-password">
-           <h2>Change Password</h2>
+       <div class="card password-card">
+           <h2><i class="fas fa-key"></i> Change Password</h2>
            <form method="POST" action="{% url 'change_password' %}">
                {% csrf_token %}
-               <input type="password" name="old_password" placeholder="Current password" required>
-               <input type="password" name="new_password1" placeholder="New password" required>
-               <input type="password" name="new_password2" placeholder="Confirm new password" required>
-               <button type="submit">Update Password</button>
+               <div class="input-group">
+                   <input type="password" name="old_password" id="current-password" placeholder="Current password" required>
+                   <i class="fas fa-unlock"></i>
+               </div>
+               <div class="input-group">
+                   <input type="password" name="new_password1" id="new-password" placeholder="New password" required>
+                   <i class="fas fa-lock"></i>
+               </div>
+               <div class="input-group">
+                   <input type="password" name="new_password2" id="confirm-password" placeholder="Confirm new password" required>
+                   <i class="fas fa-check-circle"></i>
+               </div>
+               <small id="password-match" class="hint"></small>
+               <button type="submit" id="update-password-btn" disabled>Update Password</button>
            </form>
        </div>
    </div>
+   <script src="{% static 'js/settings.js' %}"></script>
 </body>
 </html>

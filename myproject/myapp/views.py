@@ -546,3 +546,5 @@ def owner_profits_view(request):
        'pie_chart': pie_fig.to_html(),
    }
    return render(request, 'owner_profits.html', context)
+
+
