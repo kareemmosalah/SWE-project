@@ -17,7 +17,7 @@ class Court(models.Model):
     contact_phone = models.CharField(max_length=15)
     contact_email = models.EmailField()
     reviews = models.CharField(max_length=50)
-    city = models.CharField(max_length=100)  # Add this line
+    city = models.CharField(max_length=100,default="Cairo")  # Add this line
 
     def __str__(self):
         return self.name
@@ -36,3 +36,13 @@ class Datacsv(models.Model):
 
     class Meta: 
         ordering = ('date',)
+        
+class Owner(models.Model):
+    email = models.EmailField(unique=True)
+
+    def calculate_total_profits(self):
+        courts = Court.objects.filter(contact_email=self.email)
+        total_profit = sum(
+            booking.amount_paid for court in courts for booking in Booking.objects.filter(court=court)
+        )
+        return total_profit

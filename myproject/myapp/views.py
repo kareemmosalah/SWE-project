@@ -523,3 +523,26 @@ def home_page(request):
 @login_required
 def admin_dashboard(request):
     return render(request, 'Admin_Page.html')
+from django.shortcuts import render
+import plotly.express as px
+from .utils import generate_fake_profits  
+def owner_profits_view(request):
+   data = generate_fake_profits()
+   emails = [d['email'] for d in data]
+   total_profits = [sum(d['profits']) for d in data]
+   bar_fig = px.bar(
+       x=emails,
+       y=total_profits,
+       labels={'x': 'Owner Email', 'y': 'Total Profit'},
+       title='Total Profits by Owner'
+   )
+   pie_fig = px.pie(
+       values=total_profits,
+       names=emails,
+       title='Profit Distribution Among Owners'
+   )
+   context = {
+       'bar_chart': bar_fig.to_html(),
+       'pie_chart': pie_fig.to_html(),
+   }
+   return render(request, 'owner_profits.html', context)

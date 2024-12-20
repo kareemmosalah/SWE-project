@@ -31,6 +31,7 @@ urlpatterns = [
     path('settings/', views.settings_page, name='settings_page'),
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),  # Admin dashboard URL pattern
     path('cancel-booking/<int:court_id>/', views.cancel_booking, name='cancel_booking'),
+    path('owner_profits/', views.owner_profits_view, name='owner_profits'),
     # path('owner/', views.court_owner_dashboard, name='court_owner_dashboard'),
     # path('change-profile-photo/', views.change_profile_photo, name='change_profile_photo'),  # New URL
 ]

@@ -46,15 +46,10 @@
         <button type="submit">Add Court</button>
       </form>    
     </section>
-    <section class="view-profits">
-      <h2>Your Court Profits</h2>
-      <div id="profitsContainer">
-        <p>Loading profits...</p>
-      </div>
-    </section>
     <div class="action-buttons">
     <a href="{% url 'view_courts' %}" class="profile-btn">View Your Courts</a>
     <a href="{% url 'user_profile' %}" class="profile-btn">Go to Profile</a>
+    <a href="{% url 'owner_profits' %}" class="profile-btn">View Profits</a>
     </div>
 </div>
 <script src="{% static 'court_owner/owner.js' %}"></script>
