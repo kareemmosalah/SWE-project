@@ -2,13 +2,17 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from .forms import CustomUserCreationForm, CustomUserLoginForm
 from django.contrib.auth import get_user_model, load_backend
 import requests
 import json
+from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404
+from .models import Court
+from .models import CustomUser
 
-# Sample data for notifications and profile
+#sample data for notifications and profile
 sample_notifications = [
     {"title": "Booking Confirmed", "message": "Your booking at Court 1 is confirmed.", "read": False},
     {"title": "Payment Reminder", "message": "Your payment for Court 2 is pending.", "read": True},
@@ -24,7 +28,7 @@ sample_user_profile = {
     ],
 }
 
-# Define schedules for each court by ID
+#schedules for each court by ID
 court_schedules = {
     1: [
         {'time': '08:00 AM - 09:00 AM', 'status': 'Available'},
@@ -50,160 +54,80 @@ court_schedules = {
         {'time': '04:00 PM - 05:00 PM', 'status': 'Available'},
         {'time': '05:00 PM - 06:00 PM', 'status': 'Available'},
     ],
-    # Add more courts as needed
 }
 
-# Views
+#views
 
 
 def guest_login(request):
-    """
-    Logs in the user as a guest and redirects to the main page.
-    
-    Args:
-        request: The HTTP request object.
-    
-    Returns:
-        HttpResponseRedirect: Redirects to the main page.
-    """
-    messages.success(request, "Logged in as Guest.")
-    return redirect('main_page')
+    messages.success(request, "Logged in as Guest.") #to show a success message.
+    return redirect('main_page') #to redirect to the main page.
 
 def entry_page(request):
-    """
-    Renders the entry page.
-    
-    Args:
-        request: The HTTP request object.
-    
-    Returns:
-        HttpResponse: Renders the EntryPage.html template.
-    """
     return render(request, 'EntryPage.html')
 
 def book_page(request):
-    """
-    Renders the booking page.
-    
-    Args:
-        request: The HTTP request object.
-    
-    Returns:
-        HttpResponse: Renders the Book_Page.html template.
-    """
     return render(request, 'Book_Page.html')
 
+
+from django.shortcuts import render, get_object_or_404
+from .models import Court
+
 def court_info(request, court_id):
-    """
-    Provides information about a specific court based on the court_id.
-    
-    Args:
-        request: The HTTP request object.
-        court_id: The ID of the court to retrieve information for.
-    
-    Returns:
-        HttpResponse: Renders a template with court information.
-    """
-    court_data = {
-        1: {
-            'court_name': 'Court 1',
-            'details': ['Detail 1', 'Detail 2'],
-            'availability': ['Available 1', 'Available 2'],
-            'pricing': '$10/hour',
-            'location': 'Location 1',
-            'contact': {'phone': '1234567890', 'email': 'court1@example.com'},
-            'reviews': '4.5 Stars',
-        },
-        2: {
-            'court_name': 'Court 2',
-            'details': ['Detail 3', 'Detail 4'],
-            'availability': ['Available 3', 'Available 4'],
-            'pricing': '$15/hour',
-            'location': 'Location 2',
-            'contact': {'phone': '0987654321', 'email': 'court2@example.com'},
-            'reviews': '4.0 Stars',
-        },
+    court = get_object_or_404(Court, id=court_id) #to get the court for the id.
+    context = {
+        'court_id': court.id,
+        'court_name': court.name,
+        'details': court.details.split(','), 
+        'pricing': court.pricing,
+        'location': court.location,
+        'contact': {'phone': court.contact_phone, 'email': court.contact_email},
+        'reviews': court.reviews,
     }
-    court_id = int(court_id)  # Ensure court_id is an integer
-    context = court_data.get(court_id, {})
-    context['court_id'] = court_id  # Include court_id in the context
     return render(request, 'Court_Info.html', context)
 
 def courts_list(request):
-    """
-    View function that retrieves a list of courts based on the specified city.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: The rendered HTML response containing the list of courts.
-
-    """
-    city = request.GET.get('city')
-    city_courts = {
-        'cairo': [
-            {'name': 'Court 1', 'id': 1},
-            {'name': 'Court 2', 'id': 2},
-        ],
-        'alexandria': [
-            {'name': 'Court 3', 'id': 3},
-            {'name': 'Court 4', 'id': 4},
-        ],
-    }
-    courts = city_courts.get(city, [])
-    context = {'city': city, 'courts': courts}
+    city = request.GET.get('city') #to get the city from the request.   
+    print(city)  
+    courts = Court.objects.filter(city__icontains=city) #to get the courts for the city.
+    print(courts)  
+    context = {'city': city, 'courts': courts} #to pass the city and courts to the template.
+    print(context)  
     return render(request, 'Courts_List.html', context)
 
 
+# def book_time(request, court_id):
 
-def court_schedule(request, court_id):
-    """
-    View function to display the schedule for a specific court.
+#     if request.method == 'POST':
+#         time_slot = request.POST.get('time_slot') #to book a time slot for a court.
 
-    Args:
-        request (HttpRequest): The HTTP request object.
-        court_id (int): The ID of the court.
+#         if not time_slot:
+#             messages.error(request, 'No time slot selected.') #if no time slot is selected.
+#             return redirect('court_schedule', court_id=court_id) #redirect to the court schedule page.
 
-    Returns:
-        HttpResponse: The HTTP response object containing the rendered template.
+#         try:
+#             slot = CourtSchedule.objects.get(court_id=court_id, time=time_slot) #to get the time slot for the court.
+#             if slot.status == 'Available': 
+#                 slot.status = 'Booked' #to book the time slot.
+#                 slot.save() #to save the time slot.
+#                 messages.success(request, f'Time slot "{time_slot}" booked successfully!') #to show a success message.
+#             else:
+#                 messages.error(request, f'Time slot "{time_slot}" is already booked.') #to show an error message.
+#         except CourtSchedule.DoesNotExist:
+#             messages.error(request, f'Time slot "{time_slot}" not found.')
 
-    """
-    # court_schedules = {
-    #     1: [
-    #         {'time': '08:00 AM - 09:00 AM', 'status': 'Available'},
-    #         {'time': '09:00 AM - 10:00 AM', 'status': 'Booked'},
-    #         # Add more time slots as needed
-    #     ],
-    #     2: [
-    #         {'time': '08:00 AM - 09:00 AM', 'status': 'Booked'},
-    #         {'time': '09:00 AM - 10:00 AM', 'status': 'Available'},
-    #         # Add more time slots as needed
-    #     ],
-    # }
-    schedule = court_schedules.get(court_id, [])
-    context = {'schedule': schedule, 'court_id': court_id}
-    return render(request, 'Court_schedule.html', context)
+#         schedule = CourtSchedule.objects.filter(court_id=court_id) #to get the schedule for the court.
+#         return render(request, 'court_schedule.html', {'schedule': schedule, 'court_id': court_id}) #to render the court schedule page.
 
+#     return redirect('court_schedule', court_id=court_id)
 
-# Assuming court_schedules is a global variable or can be fetched from a database
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import CourtSchedule
 
-
+@login_required
 def book_time(request, court_id):
-    """
-    View function to book a time slot for a court.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-        court_id (int): The ID of the court.
-
-    Returns:
-        HttpResponse: The HTTP response object.
-
-    Raises:
-        None
-
-    """
     if request.method == 'POST':
         time_slot = request.POST.get('time_slot')
 
@@ -211,73 +135,75 @@ def book_time(request, court_id):
             messages.error(request, 'No time slot selected.')
             return redirect('court_schedule', court_id=court_id)
 
-        schedule = court_schedules.get(court_id, [])
-
-        for slot in schedule:
-            if slot['time'] == time_slot:
-                if slot['status'] == 'Available':
-                    slot['status'] = 'Booked'
-                    messages.success(request, f'Time slot "{time_slot}" booked successfully!')
-                else:
-                    messages.error(request, f'Time slot "{time_slot}" is already booked.')
-                break
-        else:
+        try:
+            slot = CourtSchedule.objects.get(court_id=court_id, time=time_slot)
+            if slot.status == 'Available':
+                slot.status = 'Booked'
+                slot.booked_by = request.user  # Update booked_by with the current user
+                slot.save()
+                messages.success(request, f'Time slot "{time_slot}" booked successfully!')
+            else:
+                messages.error(request, f'Time slot "{time_slot}" is already booked.')
+        except CourtSchedule.DoesNotExist:
             messages.error(request, f'Time slot "{time_slot}" not found.')
 
         # Pass updated schedule back to the template
+        schedule = CourtSchedule.objects.filter(court_id=court_id)
         return render(request, 'court_schedule.html', {'schedule': schedule, 'court_id': court_id})
 
+def court_schedule(request, court_id):
+    schedule = CourtSchedule.objects.filter(court_id=court_id) #to get the schedule for the court.
+    context = {'schedule': schedule, 'court_id': court_id} #to pass the schedule to the template.
+    return render(request, 'court_schedule.html', context) #to render the court schedule page.
+
+
+# def cancel_booking(request, court_id):
+#     if request.method == 'POST':
+#         time_slot = request.POST.get('time_slot') #to cancel a booking for a court. 
+#         court_schedule = get_object_or_404(CourtSchedule, court_id=court_id, time=time_slot) #to get the court schedule for the court.
+#         court_schedule.status = 'Available' #to set the status of the time slot to available.
+#         court_schedule.save() #to save the time slot.
+#         messages.success(request, 'Booking cancelled successfully.') #to show a success message.
+#         return redirect('court_schedule', court_id=court_id)
+#     return redirect('court_schedule', court_id=court_id)
+
+@login_required
+def cancel_booking(request, court_id):
+    if request.method == 'POST':
+        time_slot = request.POST.get('time_slot')
+        court_schedule = get_object_or_404(CourtSchedule, court_id=court_id, time=time_slot)
+        
+        if court_schedule.booked_by != request.user:
+            messages.error(request, 'You can only cancel your own bookings.')
+            return redirect('court_schedule', court_id=court_id)
+        
+        court_schedule.status = 'Available'
+        court_schedule.booked_by = None
+        court_schedule.save()
+        messages.success(request, 'Booking cancelled successfully.')
+        return redirect('court_schedule', court_id=court_id)
+    
     return redirect('court_schedule', court_id=court_id)
 
 
 
 def main_page(request):
-    """
-    Renders the main page with the user's name if authenticated, otherwise as 'Guest'.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: The rendered main page with the context containing the user's name.
-    """
     context = {
         "user_name": request.user.username if request.user.is_authenticated else "Guest",
     }
-    return render(request, 'MainPage.html', context)
+    return render(request, 'MainPage.html', context) 
 
 @login_required
-def user_profile(request):
-    """
-    Renders the user profile page for authenticated users.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: The rendered user profile page with the context containing the sample user profile.
-    """
+def user_profile(request): 
     context = {"profile": sample_user_profile}
     return render(request, 'user_profile.html', context)
 
 def login_signup_page(request):
-    """
-    Handles the login and signup functionality for users.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: The rendered login/signup page with the appropriate context.
-
-    The function determines whether the user is attempting to log in or sign up based on the POST data.
-    It validates the form data and either logs the user in or creates a new user account.
-    """
-    user_type = request.GET.get('user_type', 'player')  # Default to 'player'
+    user_type = request.GET.get('user_type', 'player')  #default to 'player'
 
     if request.method == "POST":
-        action = request.POST.get('action')  # Determine login or signup
-        user_type = request.POST.get('user_type')  # Get user type
+        action = request.POST.get('action')  #determine login or signup
+        user_type = request.POST.get('user_type')  #get user type
         
         if action == "Login":
             form = CustomUserLoginForm(request, data=request.POST)
@@ -285,138 +211,250 @@ def login_signup_page(request):
                 username = form.cleaned_data.get('username')
                 password = form.cleaned_data.get('password')
 
-                # Authenticate user
-                user = authenticate(username=username, password=password)
-                if user and ((user.is_player and user_type == 'player') or (user.is_admin and user_type == 'admin')):
-                    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                    messages.success(request, f"Welcome back, {user.username}!")
-                    return redirect('main_page')
+                #authenticate user
+                user = authenticate(username=username, password=password) 
+                if user and ((user.is_player and user_type == 'player') or 
+                             (user.is_admin and user_type == 'admin') or 
+                             (user.is_court_owner and user_type == 'court_owner')): 
+                    login(request, user, backend='django.contrib.auth.backends.ModelBackend') #to login the user.
+                    messages.success(request, f"Welcome back, {user.username}!") #to show a success message.
+                    return redirect('main_page') #to redirect to the main page.
                 else:
                     messages.error(request, "Invalid credentials or incorrect user type.")
             else:
-                messages.error(request, "Login failed. Please check your input.")
-                
-        elif action == "signup":
-            form = CustomUserCreationForm(request.POST)
+                messages.error(request, "Login failed. Please check your input.") #to show an error message.
+        elif action == "Signup":
+            form = CustomUserCreationForm(request.POST) #to create a new user.
             if form.is_valid():
-                user = form.save(commit=False)
+                user = form.save(commit=False) #to save the user without committing to the database.
                 user.is_player = user_type == 'player'
                 user.is_admin = user_type == 'admin'
+                user.is_court_owner = user_type == 'court_owner'
                 user.save()
-                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                messages.success(request, "Account created successfully!")
-                return redirect('main_page')
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend') #to login the user.
+                messages.success(request, "Account created successfully!") #to show a success message.
+                return redirect('main_page') #to redirect to the main page.
             else:
-                messages.error(request, "Signup failed. Please check your input.")
+                messages.error(request, "Signup failed. Please check your input.") #to show an error message.
 
     else:
-        form = CustomUserLoginForm()
+        form = CustomUserLoginForm() #to create a new login form.
 
-    return render(request, 'login_signup.html', {'user_type': user_type})
+    return render(request, 'login_signup.html', {'user_type': user_type}) #to render the login signup page.
 
-@login_required
-def court_owner_dashboard(request):
-    """
-    Renders the dashboard for court owners with their courts and total profit.
 
-    Args:
-        request (HttpRequest): The HTTP request object.
 
-    Returns:
-        HttpResponse: The rendered owner dashboard page with the context containing the courts and total profit.
-
-    The function retrieves all courts owned by the logged-in user and calculates the total profit from bookings.
-    """
-    courts = Court.objects.filter(owner=request.user)
-    total_profit = sum(booking.amount_paid for booking in Booking.objects.filter(court__in=courts))
-    context = {
-        'courts': courts,
-        'total_profit': total_profit,
-    }
-    return render(request, 'owner.html', context)
+from .models import Court, CourtSchedule
+from django.contrib import messages
+from django.shortcuts import render, redirect
 
 def add_court(request):
-    """
-    Handles the addition of a new court by the court owner.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: Redirects to the court owner dashboard if the court is successfully added,
-                      otherwise renders the add court page.
-
-    The function processes the POST request to create a new court with the provided name, location, and price.
-    """
     if request.method == 'POST':
-        name = request.POST['name']
-        location = request.POST['location']
-        price = request.POST['price']
-        Court.objects.create(owner=request.user, name=name, location=location, price_per_hour=price)
+        name = request.POST['courtName']
+        location = request.POST.get('location', 'Cairo')
+        price = request.POST.get('price', '10')
+        city = request.POST.get('city', 'Cairo')
+        contact_phone = request.POST.get('contact_phone', request.user.username)
+        contact_email = request.user.email
+        details = request.POST.get('details', 'Details not provided')
+
+        # Save court to database
+        court = Court.objects.create(
+            name=name,
+            location=location,
+            pricing=price,
+            city=city,
+            contact_phone=contact_phone,
+            contact_email=contact_email,
+            details=details,
+            reviews='No reviews yet',
+        )
+
+        # Default time slots
+        time_slots = [
+            {'time': '08:00 AM - 09:00 AM', 'status': 'Available'},
+            {'time': '09:00 AM - 10:00 AM', 'status': 'Available'},
+            {'time': '10:00 AM - 11:00 AM', 'status': 'Available'},
+            {'time': '11:00 AM - 12:00 PM', 'status': 'Available'},
+            {'time': '12:00 PM - 01:00 PM', 'status': 'Available'},
+            {'time': '01:00 PM - 02:00 PM', 'status': 'Available'},
+            {'time': '02:00 PM - 03:00 PM', 'status': 'Available'},
+            {'time': '03:00 PM - 04:00 PM', 'status': 'Available'},
+            {'time': '04:00 PM - 05:00 PM', 'status': 'Available'},
+            {'time': '05:00 PM - 06:00 PM', 'status': 'Available'},
+        ]
+
+        # Create CourtSchedule entries for the new court
+        for slot in time_slots:
+            CourtSchedule.objects.create(
+                court=court,
+                time=slot['time'],
+                status=slot['status']
+            )
+
+        messages.success(request, "Court added successfully!")
         return redirect('court_owner_dashboard')
-    return render(request, 'court_owner/add_court.html')
 
+    return render(request, 'owner.html')
+
+#view profits 
 def view_profits(request):
-    """
-    Displays the total profit for the court owner from all their courts.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: The rendered view profits page with the context containing the total profit.
-
-    The function calculates the total profit from all bookings for the courts owned by the logged-in user.
-    """
     courts = Court.objects.filter(owner=request.user)
     total_profit = sum(booking.amount_paid for booking in Booking.objects.filter(court__in=courts))
     return render(request, 'court_owner/view_profits.html', {'total_profit': total_profit})
 
-def send_notification(registration_ids, message_title, message_desc):
-    """
-    Sends a notification to the specified registration IDs using Firebase Cloud Messaging (FCM).
 
-    Args:
-        registration_ids (list): List of registration IDs to send the notification to.
-        message_title (str): The title of the notification message.
-        message_desc (str): The body of the notification message.
-
-    Returns:
-        None
-
-    The function constructs the payload with the provided message title and description,
-    and sends a POST request to the FCM API endpoint with the necessary headers.
-    """
-    fcm_api = "YOUR_SERVER_KEY"  # Replace with your actual FCM server key
-    url = "https://fcm.googleapis.com/fcm/send"
-
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f'key={fcm_api}'
-    }
-
-    payload = {
-        "registration_ids": registration_ids,
-        "priority": "high",
-        "notification": {
-            "body": message_desc,
-            "title": message_title,
-        }
-    }
-
-    result = requests.post(url, data=json.dumps(payload), headers=headers)
-    print(result.json())
-
-def notification_page(request):
-    """
-    Renders the notification page.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: The rendered notification page.
-
-    The function simply renders the 'Notification.html' template.
-    """
+def notification_page(request): 
     return render(request, 'Notification.html')
+
+from .models import Court 
+
+def court_owner_dashboard(request): #to view the court owner dashboard.
+    courts = Court.objects.filter(contact_email=request.user.email) #to get the courts for the user.    
+    context = {'courts': courts} #to pass the courts to the template.
+    return render(request, 'owner.html', context) 
+
+
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+
+def change_username(request): 
+    if request.method == 'POST':
+        new_username = request.POST['new_username']
+        request.user.username = new_username
+        request.user.save()
+        messages.success(request, "Username updated successfully!")
+    return redirect('user_profile')
+
+from django.contrib.auth.forms import PasswordChangeForm
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST) #to create a new password change form.
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  #keeps the user logged in
+            messages.success(request, "Password updated successfully!")
+        else:
+            messages.error(request, "Password update failed. Please check the form.")
+    return redirect('user_profile')
+
+
+def chart(request):
+    start = request.GET.get('start')
+    end = request.GET.get('end')
+
+    data = Datacsv.objects.all() #to get the data from the database.
+
+    if start:
+        data = data.filter(date__gte=start) #to filter the data by start date.
+    if end:
+        data = data.filter(date__lte=end) #to filter the data by end date.
+
+    fig = px.line(
+        x=[c.date for c in data], 
+        y=[c.average for c in data], 
+        title="Average profit per year",
+        labels={'x': 'Date', 'y': 'Profit'}
+    )
+
+    fig.update_layout(
+        title={
+            'font_size': 24,
+            'xanchor': 'center',
+            'x': 0.5
+        })
+    
+    chart = fig.to_html() #to convert the figure to html.
+    context = {'chart': chart, 'form': DateForm()} #to pass the chart to the template.
+    return render(request, 'myproject/myapp/templates/reportpage.html', context)
+
+def view_courts(request):
+    courts = Court.objects.filter(contact_email=request.user.email) #to get the courts for the user.
+    return render(request, 'view_courts.html', {'courts': courts}) #to render the view courts page.
+
+def settings_page(request):
+    return render(request, 'settings.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('entry_page')
+
+def home_page(request):
+    return render(request, 'home.html')
+
+
+
+@login_required
+def admin_dashboard(request):
+    selected_city = request.GET.get('city', '') #to get the selected city.
+    selected_user_type = request.GET.get('user_type', '') #to get the selected user type
+    
+    if selected_city: 
+        courts = Court.objects.filter(city=selected_city) #to get the courts for the selected city.
+    else:
+        courts = Court.objects.all() #to get all the courts.
+    
+    if selected_user_type:
+        if selected_user_type == 'admin':
+            users = CustomUser.objects.filter(is_admin=True)
+        elif selected_user_type == 'court_owner':
+            users = CustomUser.objects.filter(is_court_owner=True)
+        elif selected_user_type == 'player':
+            users = CustomUser.objects.filter(is_player=True)
+    else:
+        users = CustomUser.objects.all()
+
+    if request.method == 'POST':
+        if 'court_id' in request.POST:
+            court_id = request.POST.get('court_id')
+            if Court.objects.filter(id=court_id).exists(): 
+                Court.objects.filter(id=court_id).delete() #to delete the court.
+                messages.success(request, "Court deleted successfully!") #to show a success message.
+            else:
+                messages.error(request, "Court not found.") #to show an error message.
+        elif 'user_id' in request.POST:
+            user_id = request.POST.get('user_id')
+            if CustomUser.objects.filter(id=user_id).exists():
+                CustomUser.objects.filter(id=user_id).delete()
+                messages.success(request, "User deleted successfully!")
+            else:
+                messages.error(request, "User not found.") #to show an error message.
+        return redirect('admin_dashboard')
+
+    cities = Court.objects.values_list('city', flat=True).distinct() #to get the cities from the courts.
+
+    context = {
+        'courts': courts, 
+        'cities': cities,
+        'selected_city': selected_city,
+        'users': users,
+        'selected_user_type': selected_user_type,
+    }
+    return render(request, 'admin_dashboard.html', context)
+
+from django.shortcuts import render
+import plotly.express as px
+from .utils import generate_fake_profits  
+def owner_profits_view(request): 
+   data = generate_fake_profits() #to generate fake profits.
+   emails = [d['email'] for d in data] #to get the emails from the data.
+   total_profits = [sum(d['profits']) for d in data] #to get the total profits from the data.
+   bar_fig = px.bar(
+       x=emails,
+       y=total_profits,
+       labels={'x': 'Owner Email', 'y': 'Total Profit'},
+       title='Total Profits by Owner'
+   )
+   pie_fig = px.pie(
+       values=total_profits,
+       names=emails,
+       title='Profit Distribution Among Owners'
+   )
+   context = {
+       'bar_chart': bar_fig.to_html(),
+       'pie_chart': pie_fig.to_html(),
+   }
+   return render(request, 'owner_profits.html', context)

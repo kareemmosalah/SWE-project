@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-+ffyv8qj8kt_bi2xy(9!9()%_701@%(5qk=q!kbeplgt5v3h#1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
 
 
 # Application definition
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
 ]
 
 SITE_ID = 2
-
+SOCIALACCOUNT_LOGIN_ON_GET = True
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -80,6 +80,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'myproject.urls'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -105,13 +106,13 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Tegy_Hagz_db',  # Database name
-        'USER': 'Tegy_Hagz_db_owner',  # Database user
-        'PASSWORD': 'XnUryvc4Z6uK',  # Database password
-        'HOST': 'ep-patient-bush-a5c67jl9.us-east-2.aws.neon.tech',  # Database host
-        'PORT': '5432',  # PostgreSQL default port
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST'),
+        'PORT': os.getenv('POSTGRES_PORT'),
         'OPTIONS': {
-            'sslmode': 'require',  # Required for secure connections
+            'sslmode': 'require',
         },
     }
 }

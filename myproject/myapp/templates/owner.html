@@ -1,155 +1,63 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Court Owner Dashboard</title>
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'court_owner/styles.css' %}">
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #e9f5ff;
-      color: #333;
-    }
-
-    .owner-container {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 20px;
-      background-color: #ffffff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
-    }
-
-    h1 {
-      text-align: center;
-      color: #2d87f0;
-      margin-bottom: 20px;
-    }
-
-    h2 {
-      color: #2d87f0;
-      font-weight: bold;
-      margin-bottom: 15px;
-      border-bottom: 3px solid #d1e8ff;
-      padding-bottom: 5px;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    label {
-      font-weight: bold;
-      color: #555;
-    }
-
-    input, button {
-      padding: 12px;
-      font-size: 1rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    input:focus {
-      border-color: #2d87f0;
-      outline: none;
-    }
-
-    button {
-      background-color: #2d87f0;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    button:hover {
-      background-color: #1c66cc;
-    }
-
-    .view-profits {
-      margin-top: 30px;
-    }
-
-    #profitsContainer p {
-      font-size: 1.1rem;
-      color: #444;
-      margin: 10px 0;
-    }
-
-    .action-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
-    }
-
-    .action-buttons .profile-btn {
-      background-color: #4caf50;
-      color: white;
-      text-decoration: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      font-size: 1rem;
-      font-weight: bold;
-    }
-
-    .action-buttons .profile-btn:hover {
-      background-color: #45a049;
-    }
-
-    footer {
-      background-color: #2d87f0;
-      color: white;
-      text-align: center;
-      padding: 10px;
-      margin-top: 40px;
-      border-radius: 8px;
-    }
-
-    footer p {
-      margin: 0;
-      font-size: 0.9rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Court Details</title>
+    <link rel="stylesheet" href="{% static 'css/owner.css' %}">
 </head>
 <body>
-  <div class="owner-container">
-    <h1>Court Owner Dashboard</h1>
-    <section class="add-court">
-      <h2>Add New Court</h2>
-      <form id="addCourtForm">
-        <label for="courtName">Court Name:</label>
-        <input type="text" id="courtName" name="courtName" placeholder="Enter court name" required>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{% url 'home_page' %}">Tegy Hagz</a>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'main_page' %}">Home</a>
+            <a href="{% url 'book_page' %}">Booking</a>
+            <a href="{% url 'notification' %}">Notification</a>
+            <a href="{% url 'user_profile' %}">Profile</a>
+            {% if user.is_authenticated %}
+                {% if user.is_court_owner %}
+                    <a href="{% url 'court_owner_dashboard' %}">Owner Page</a>
+                {% elif user.is_admin %}
+                    <a href="{% url 'admin_dashboard' %}">Admin Page</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </nav>
 
-        <label for="location">Location:</label>
-        <input type="text" id="location" name="location" placeholder="Enter court location" required>
+    <div class="container">
+        <!-- Text Section -->
+        <div class="text-section">
+            <h1>{{ court_name }}</h1>
+            <div class="details">
+                <h3>Details</h3>
+                {% for detail in details %}
+                    <p>{{ detail }}</p>
+                {% endfor %}
+            </div>
+            <div class="pricing">
+                <h3>Pricing</h3>
+                <p>{{ pricing }}</p>
+            </div>
+            <div class="location">
+                <h3>Location</h3>
+                <p>{{ location }}</p>
+                <h3>Contact</h3>
+                <p>Phone: {{ contact.phone }}, Email: {{ contact.email }}</p>
+                <h3>Reviews</h3>
+                <p>{{ reviews }}</p>
+            </div>
+            <form method="get" action="{% url 'court_schedule' court_id %}">
+                <button type="submit">View Schedule</button>
+            </form>
+        </div>
 
-        <label for="price">Price Per Hour:</label>
-        <input type="number" id="price" name="price" placeholder="Enter price per hour" required>
-
-        <button type="submit">Add Court</button>
-      </form>
-    </section>
-    <section class="view-profits">
-      <h2>Your Court Profits</h2>
-      <div id="profitsContainer">
-        <p>Loading profits...</p>
-      </div>
-    </section>
-
-    <div class="action-buttons">
-    <a href="{% url 'user_profile' %}" class="profile-btn">Go to Profile</a>
+        <!-- Image Section -->
+        <div class="image-section">
+          <img src="{% static 'images/home-img.png' %}" alt="Football Court Illustration" class="hero-image">
+        </div>
     </div>
-</div>
-
-
-
-<script src="{% static 'court_owner/owner.js' %}"></script>
 </body>
 </html>

@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">
+        <a href="{% url 'home_page' %}">Tegy Hagz</a>
+    </div>
+    <div class="nav-links">
+        <a href="{% url 'main_page' %}">Home</a>
+        <a href="{% url 'book_page' %}">Booking</a>
+        <a href="{% url 'notification' %}">Notification</a>
+        <a href="{% url 'user_profile' %}">Profile</a>
+        {% if user.is_authenticated %}
+            {% if user.is_court_owner %}
+                <a href="{% url 'court_owner_dashboard' %}">Owner Page</a>
+            {% elif user.is_admin %}
+                <a href="{% url 'admin_dashboard' %}">Admin Page</a>
+            {% endif %}
+        {% endif %}
+    </div>
+  </nav>
+
+  <div class="admin-container">
+    <h1>Admin Dashboard</h1>
+    <h3>___________________________________________________________________________________________________________________</h3>
+    
+    <!-- Courts Section -->
+    <h2>Courts</h2>
+    <form method="get" action="{% url 'admin_dashboard' %}">
+      <select name="city" id="city" onchange="this.form.submit()">
+        <option value="" {% if not selected_city or selected_city == "" %}selected{% endif %}>All Cities</option>
+        {% for city in cities %}
+          <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>{{ city }}</option>
+        {% endfor %}
+      </select>
+    </form>
+    
+    <div class="reservations">
+      {% for court in courts %}
+        <div class="reservation-item">
+          <p><strong>Court:</strong> {{ court.name }}</p>
+          <p><strong>Location:</strong> {{ court.city }}</p>
+          <p><strong>User Type:</strong> 
+            {% if court.user.is_admin %}Admin
+            {% elif court.user.is_court_owner %}Court Owner
+            {% elif court.user.is_player %}Player
+            {% endif %}
+          </p>
+          <form method="post" action="{% url 'admin_dashboard' %}">
+            {% csrf_token %}
+            <input type="hidden" name="court_id" value="{{ court.id }}">
+            <button type="submit" class="delete-btn">Delete Court</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+    
+    <h3>___________________________________________________________________________________________________________________</h3>
+    
+    <!-- Users Section -->
+    <h2>Users</h2>
+    <!-- Dropdown for filtering users -->
+    <form method="get" action="{% url 'admin_dashboard' %}">
+      <select name="user_type" id="user_type" onchange="this.form.submit()">
+        <option value="" {% if not selected_user_type or selected_user_type == "" %}selected{% endif %}>All User Types</option>
+        <option value="admin" {% if selected_user_type == "admin" %}selected{% endif %}>Admin</option>
+        <option value="court_owner" {% if selected_user_type == "court_owner" %}selected{% endif %}>Court Owner</option>
+        <option value="player" {% if selected_user_type == "player" %}selected{% endif %}>Player</option>
+      </select>
+    </form>
+
+    <div class="users-grid">
+      {% for user in users %}
+        <div class="user-item">
+          <p><strong>Username:</strong> {{ user.username }}</p>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>User Type:</strong> 
+            {% if user.is_admin %}Admin
+            {% elif user.is_court_owner %}Court Owner
+            {% elif user.is_player %}Player
+            {% endif %}
+          </p>
+          <form method="post" action="{% url 'admin_dashboard' %}">
+            {% csrf_token %}
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <button type="submit" name="delete_user" class="btn btn-danger delete-btn">Delete User</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+</html>

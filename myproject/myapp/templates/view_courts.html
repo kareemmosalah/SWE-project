@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html><html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Your Courts</title>
+   <link rel="stylesheet" href="{% static 'css/view_court.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{% url 'home_page' %}">Tegy Hagz</a>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'main_page' %}">Home</a>
+            <a href="{% url 'book_page' %}">Booking</a>
+            <a href="{% url 'notification' %}">Notification</a>
+            <a href="{% url 'user_profile' %}">Profile</a>
+            {% if user.is_authenticated %}
+                {% if user.is_court_owner %}
+                    <a href="{% url 'court_owner_dashboard' %}">Owner Page</a>
+                {% elif user.is_admin %}
+                    <a href="{% url 'admin_dashboard' %}">Admin Page</a>
+                {% endif %}
+            {% endif %}
+        </div>
+      </nav>
+   <div class="container">
+       <h1>Your Courts</h1>
+       {% for court in courts %}
+           <div>
+               <h3>{{ court.name }}</h3>
+               <p>Location: {{ court.location }}</p>
+               <p>Pricing: {{ court.pricing }}</p>
+               <p>Contact: {{ court.contact_phone }}</p>
+           </div>
+       {% empty %}
+           <p>No courts added yet.</p>
+       {% endfor %}
+   </div>
+</body>
+</html>

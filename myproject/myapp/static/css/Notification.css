@@ -1,0 +1,81 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: rgba(0, 0, 0, 0.9); /* Slightly darker transparent background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+    position: sticky;
+    top: 0; /* Stick to the top on scroll */
+    z-index: 1000; /* Ensure navbar is on top */
+}
+
+/* Logo styling */
+.logo a {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #239931; /* Bright blue for logo text */
+    text-decoration: none;
+    transition: color 0.3s ease; /* Smooth hover transition */
+}
+
+.logo a:hover {
+    color: #0f6f28; /* Slightly darker blue on hover */
+}
+
+/* Nav links container */
+.nav-links {
+    display: flex;
+    gap: 20px; /* Space between links */
+    flex: 1; /* Take up remaining space */
+    justify-content: center; /* Center links within container */
+    transform: translateX(-80px); /* Manually adjust position */
+    text-align: center;
+}
+
+/* Individual nav links */
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-weight: 500; /* Slightly bold for better readability */
+    transition: color 0.3s ease; /* Smooth hover effect */
+}
+
+/* Hover effect on nav links */
+.nav-links a:hover {
+    color: #239931; /* Blue color on hover */
+}
+
+.notification-container {
+    text-align: center;
+    background: #ffffff;
+    margin: auto;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin-top: 20px;
+}
+
+h1 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #666;
+    font-size: 16px;
+}

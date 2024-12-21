@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link rel="stylesheet" href="{% static 'css/court_schedule.css' %}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+
+        .court-list {
+            margin: 20px;
+        }
+
+        .court-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .court-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .court-item:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .court-details {
+            flex-grow: 1;
+        }
+
+        .court-details p {
+            margin: 5px 0;
+        }
+
+        .court-title {
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .accept-btn, .decline-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .accept-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .accept-btn:hover {
+            background-color: #45a049;
+        }
+
+        .decline-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .decline-btn:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{% url 'home_page' %}">TegyHagz</a>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'main_page' %}">Home</a>
+            <a href="{% url 'book_page' %}">Booking</a>
+            <a href="{% url 'notification' %}">Notification</a>
+            <a href="{% url 'user_profile' %}">Profile</a>
+        </div>
+    </nav>
+
+    <div class="court-list">
+        <h2>Court Data</h2>
+        <div class="court-grid">
+            <div class="court-item">
+                <div class="court-details">
+                    <p class="court-title">Court 1</p>
+                    <p>Location: XYZ</p>
+                    <p>Time: 10:00 AM</p>
+                </div>
+                <div class="button-group">
+                    <button class="accept-btn">Accept</button>
+                    <button class="decline-btn">Decline</button>
+                </div>
+            </div>
+            <div class="court-item">
+                <div class="court-details">
+                    <p class="court-title">Court 2</p>
+                    <p>Location: ABC</p>
+                    <p>Time: 2:00 PM</p>
+                </div>
+                <div class="button-group">
+                    <button class="accept-btn">Accept</button>
+                    <button class="decline-btn">Decline</button>
+                </div>
+            </div>
+            <div class="court-item">
+                <div class="court-details">
+                    <p class="court-title">Court 3</p>
+                    <p>Location: DEF</p>
+                    <p>Time: 4:00 PM</p>
+                </div>
+                <div class="button-group">
+                    <button class="accept-btn">Accept</button>
+                    <button class="decline-btn">Decline</button>
+                </div>
+            </div>
+            <div class="court-item">
+                <div class="court-details">
+                    <p class="court-title">Court 4</p>
+                    <p>Location: GHI</p>
+                    <p>Time: 6:00 PM</p>
+                </div>
+                <div class="button-group">
+                    <button class="accept-btn">Accept</button>
+                    <button class="decline-btn">Decline</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

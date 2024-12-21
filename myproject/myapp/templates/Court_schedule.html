@@ -6,17 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Court Schedule</title>
     <link rel="stylesheet" href="{% static 'css/court_schedule.css' %}">
+    <style>
+        .cancel-button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="logo">
-            <a href="{% url 'home_page' %}">TegyHagz</a>
+            <a href="{% url 'home_page' %}">Tegy Hagz</a>
         </div>
         <div class="nav-links">
             <a href="{% url 'main_page' %}">Home</a>
             <a href="{% url 'book_page' %}">Booking</a>
             <a href="{% url 'notification' %}">Notification</a>
             <a href="{% url 'user_profile' %}">Profile</a>
+            {% if user.is_authenticated %}
+                {% if user.is_court_owner %}
+                    <a href="{% url 'court_owner_dashboard' %}">Owner Page</a>
+                {% elif user.is_admin %}
+                    <a href="{% url 'admin_dashboard' %}">Admin Page</a>
+                {% endif %}
+            {% endif %}
         </div>
     </nav>
     <div class="container">
@@ -48,7 +64,11 @@
                             <button type="submit" class="book-button">Book</button>
                         </form>
                         {% else %}
-                        <button disabled>Booked</button>
+                        <form method="post" action="{% url 'cancel_booking' court_id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="time_slot" value="{{ slot.time }}">
+                            <button type="submit" class="cancel-button">Cancel Booking</button>
+                        </form>
                         {% endif %}
                     </td>
                 </tr>
@@ -56,5 +76,15 @@
             </table>
         </div>
     </div>
+
+    <script>
+        // Hide messages after 4 seconds (4000 milliseconds)
+        setTimeout(function() {
+            var messages = document.querySelector('.messages');
+            if (messages) {
+                messages.style.display = 'none';
+            }
+        }, 2000);
+    </script>
 </body>
 </html>
