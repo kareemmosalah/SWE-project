@@ -6,9 +6,9 @@ class CustomUser(AbstractUser):
     Custom user model extending the default Django user model.
     Adds additional fields to distinguish between admin and player users.
     """
-    is_admin = models.BooleanField(default=False)  # Indicates if the user is an admin
-    is_player = models.BooleanField(default=False)  # Indicates if the user is a player
-    is_court_owner = models.BooleanField(default=False)  # Indicates if the user is a court owner
+    is_admin = models.BooleanField(default=False)  
+    is_player = models.BooleanField(default=False) 
+    is_court_owner = models.BooleanField(default=False) 
 class Court(models.Model):
     name = models.CharField(max_length=100)
     details = models.TextField()
@@ -17,7 +17,7 @@ class Court(models.Model):
     contact_phone = models.CharField(max_length=15)
     contact_email = models.EmailField()
     reviews = models.CharField(max_length=50)
-    city = models.CharField(max_length=100,default="Cairo")  # Add this line
+    city = models.CharField(max_length=100,default="Cairo")  
 
     def __str__(self):
         return self.name

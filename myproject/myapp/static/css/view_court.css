@@ -32,3 +32,46 @@ h1 {
     margin: 5px 0;
     color: #555;
 }
+
+/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 15px 30px;
+    background: #000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo a {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #4caf50;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.logo a:hover {
+    color: #388e3c;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    justify-content: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #4caf50;
+}
