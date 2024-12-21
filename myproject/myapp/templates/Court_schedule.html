@@ -76,5 +76,15 @@
             </table>
         </div>
     </div>
+
+    <script>
+        // Hide messages after 4 seconds (4000 milliseconds)
+        setTimeout(function() {
+            var messages = document.querySelector('.messages');
+            if (messages) {
+                messages.style.display = 'none';
+            }
+        }, 2000);
+    </script>
 </body>
 </html>

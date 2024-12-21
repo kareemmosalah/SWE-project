@@ -95,34 +95,61 @@ def courts_list(request):
     print(context)  
     return render(request, 'Courts_List.html', context)
 
-from django.shortcuts import render, redirect
+
+# def book_time(request, court_id):
+
+#     if request.method == 'POST':
+#         time_slot = request.POST.get('time_slot') #to book a time slot for a court.
+
+#         if not time_slot:
+#             messages.error(request, 'No time slot selected.') #if no time slot is selected.
+#             return redirect('court_schedule', court_id=court_id) #redirect to the court schedule page.
+
+#         try:
+#             slot = CourtSchedule.objects.get(court_id=court_id, time=time_slot) #to get the time slot for the court.
+#             if slot.status == 'Available': 
+#                 slot.status = 'Booked' #to book the time slot.
+#                 slot.save() #to save the time slot.
+#                 messages.success(request, f'Time slot "{time_slot}" booked successfully!') #to show a success message.
+#             else:
+#                 messages.error(request, f'Time slot "{time_slot}" is already booked.') #to show an error message.
+#         except CourtSchedule.DoesNotExist:
+#             messages.error(request, f'Time slot "{time_slot}" not found.')
+
+#         schedule = CourtSchedule.objects.filter(court_id=court_id) #to get the schedule for the court.
+#         return render(request, 'court_schedule.html', {'schedule': schedule, 'court_id': court_id}) #to render the court schedule page.
+
+#     return redirect('court_schedule', court_id=court_id)
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import CourtSchedule
 
+@login_required
 def book_time(request, court_id):
-
     if request.method == 'POST':
-        time_slot = request.POST.get('time_slot') #to book a time slot for a court.
+        time_slot = request.POST.get('time_slot')
 
         if not time_slot:
-            messages.error(request, 'No time slot selected.') #if no time slot is selected.
-            return redirect('court_schedule', court_id=court_id) #redirect to the court schedule page.
+            messages.error(request, 'No time slot selected.')
+            return redirect('court_schedule', court_id=court_id)
 
         try:
-            slot = CourtSchedule.objects.get(court_id=court_id, time=time_slot) #to get the time slot for the court.
-            if slot.status == 'Available': 
-                slot.status = 'Booked' #to book the time slot.
-                slot.save() #to save the time slot.
-                messages.success(request, f'Time slot "{time_slot}" booked successfully!') #to show a success message.
+            slot = CourtSchedule.objects.get(court_id=court_id, time=time_slot)
+            if slot.status == 'Available':
+                slot.status = 'Booked'
+                slot.booked_by = request.user  # Update booked_by with the current user
+                slot.save()
+                messages.success(request, f'Time slot "{time_slot}" booked successfully!')
             else:
-                messages.error(request, f'Time slot "{time_slot}" is already booked.') #to show an error message.
+                messages.error(request, f'Time slot "{time_slot}" is already booked.')
         except CourtSchedule.DoesNotExist:
             messages.error(request, f'Time slot "{time_slot}" not found.')
 
-        schedule = CourtSchedule.objects.filter(court_id=court_id) #to get the schedule for the court.
-        return render(request, 'court_schedule.html', {'schedule': schedule, 'court_id': court_id}) #to render the court schedule page.
-
-    return redirect('court_schedule', court_id=court_id)
+        # Pass updated schedule back to the template
+        schedule = CourtSchedule.objects.filter(court_id=court_id)
+        return render(request, 'court_schedule.html', {'schedule': schedule, 'court_id': court_id})
 
 def court_schedule(request, court_id):
     schedule = CourtSchedule.objects.filter(court_id=court_id) #to get the schedule for the court.
@@ -130,14 +157,32 @@ def court_schedule(request, court_id):
     return render(request, 'court_schedule.html', context) #to render the court schedule page.
 
 
+# def cancel_booking(request, court_id):
+#     if request.method == 'POST':
+#         time_slot = request.POST.get('time_slot') #to cancel a booking for a court. 
+#         court_schedule = get_object_or_404(CourtSchedule, court_id=court_id, time=time_slot) #to get the court schedule for the court.
+#         court_schedule.status = 'Available' #to set the status of the time slot to available.
+#         court_schedule.save() #to save the time slot.
+#         messages.success(request, 'Booking cancelled successfully.') #to show a success message.
+#         return redirect('court_schedule', court_id=court_id)
+#     return redirect('court_schedule', court_id=court_id)
+
+@login_required
 def cancel_booking(request, court_id):
     if request.method == 'POST':
-        time_slot = request.POST.get('time_slot') #to cancel a booking for a court. 
-        court_schedule = get_object_or_404(CourtSchedule, court_id=court_id, time=time_slot) #to get the court schedule for the court.
-        court_schedule.status = 'Available' #to set the status of the time slot to available.
-        court_schedule.save() #to save the time slot.
-        messages.success(request, 'Booking cancelled successfully.') #to show a success message.
+        time_slot = request.POST.get('time_slot')
+        court_schedule = get_object_or_404(CourtSchedule, court_id=court_id, time=time_slot)
+        
+        if court_schedule.booked_by != request.user:
+            messages.error(request, 'You can only cancel your own bookings.')
+            return redirect('court_schedule', court_id=court_id)
+        
+        court_schedule.status = 'Available'
+        court_schedule.booked_by = None
+        court_schedule.save()
+        messages.success(request, 'Booking cancelled successfully.')
         return redirect('court_schedule', court_id=court_id)
+    
     return redirect('court_schedule', court_id=court_id)
 
 
@@ -199,30 +244,58 @@ def login_signup_page(request):
 
 
 
-def add_court(request): 
-    if request.method == 'POST': #if the request method is post.      
-        name = request.POST['courtName']  
-        location = request.POST['location'] 
-        price = request.POST['price'] 
-        city = request.POST['city'] 
-        contact_phone = request.user.username
-        contact_email = request.user.email  
+from .models import Court, CourtSchedule
+from django.contrib import messages
+from django.shortcuts import render, redirect
 
-        #save court to database
-        Court.objects.create(
+def add_court(request):
+    if request.method == 'POST':
+        name = request.POST['courtName']
+        location = request.POST.get('location', 'Cairo')
+        price = request.POST.get('price', '10')
+        city = request.POST.get('city', 'Cairo')
+        contact_phone = request.POST.get('contact_phone', request.user.username)
+        contact_email = request.user.email
+        details = request.POST.get('details', 'Details not provided')
+
+        # Save court to database
+        court = Court.objects.create(
             name=name,
             location=location,
             pricing=price,
-            city=city,  
+            city=city,
             contact_phone=contact_phone,
             contact_email=contact_email,
-            details='Details not provided', 
+            details=details,
             reviews='No reviews yet',
         )
+
+        # Default time slots
+        time_slots = [
+            {'time': '08:00 AM - 09:00 AM', 'status': 'Available'},
+            {'time': '09:00 AM - 10:00 AM', 'status': 'Available'},
+            {'time': '10:00 AM - 11:00 AM', 'status': 'Available'},
+            {'time': '11:00 AM - 12:00 PM', 'status': 'Available'},
+            {'time': '12:00 PM - 01:00 PM', 'status': 'Available'},
+            {'time': '01:00 PM - 02:00 PM', 'status': 'Available'},
+            {'time': '02:00 PM - 03:00 PM', 'status': 'Available'},
+            {'time': '03:00 PM - 04:00 PM', 'status': 'Available'},
+            {'time': '04:00 PM - 05:00 PM', 'status': 'Available'},
+            {'time': '05:00 PM - 06:00 PM', 'status': 'Available'},
+        ]
+
+        # Create CourtSchedule entries for the new court
+        for slot in time_slots:
+            CourtSchedule.objects.create(
+                court=court,
+                time=slot['time'],
+                status=slot['status']
+            )
+
         messages.success(request, "Court added successfully!")
         return redirect('court_owner_dashboard')
 
-    return render(request, 'owner.html') 
+    return render(request, 'owner.html')
 
 #view profits 
 def view_profits(request):
@@ -317,12 +390,23 @@ def home_page(request):
 @login_required
 def admin_dashboard(request):
     selected_city = request.GET.get('city', '') #to get the selected city.
+    selected_user_type = request.GET.get('user_type', '') #to get the selected user type
     
     if selected_city: 
         courts = Court.objects.filter(city=selected_city) #to get the courts for the selected city.
     else:
         courts = Court.objects.all() #to get all the courts.
     
+    if selected_user_type:
+        if selected_user_type == 'admin':
+            users = CustomUser.objects.filter(is_admin=True)
+        elif selected_user_type == 'court_owner':
+            users = CustomUser.objects.filter(is_court_owner=True)
+        elif selected_user_type == 'player':
+            users = CustomUser.objects.filter(is_player=True)
+    else:
+        users = CustomUser.objects.all()
+
     if request.method == 'POST':
         if 'court_id' in request.POST:
             court_id = request.POST.get('court_id')
@@ -342,13 +426,12 @@ def admin_dashboard(request):
 
     cities = Court.objects.values_list('city', flat=True).distinct() #to get the cities from the courts.
 
-    users = CustomUser.objects.all()
-
     context = {
         'courts': courts, 
         'cities': cities,
         'selected_city': selected_city,
         'users': users,
+        'selected_user_type': selected_user_type,
     }
     return render(request, 'admin_dashboard.html', context)
 
