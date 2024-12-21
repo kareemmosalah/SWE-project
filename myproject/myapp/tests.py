@@ -11,9 +11,9 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 
 
-options = webdriver.ChromeOptions()
-service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service, options=options)
+options = webdriver.ChromeOptions() #to set the options for the chrome driver.
+service = Service(ChromeDriverManager().install()) #to install the chrome driver.
+driver = webdriver.Chrome(service=service, options=options) #to create the chrome driver.
 
 driver.get("http://127.0.0.1:8000/")
 

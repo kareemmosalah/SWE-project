@@ -1,14 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include
 from myapp import views
-
-# Add imports for media files
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),  # Admin site URL
-    path('accounts/', include('allauth.urls')),  # Include allauth URLs for account management
+    path('admin/', admin.site.urls),  #admin site URL
+    path('accounts/', include('allauth.urls')),  #include allauth URLs for account management
     path('guest-login/', views.guest_login, name='guest_login'),
     path('', views.entry_page, name='home_page'),
     path('entry/', views.entry_page, name='entry_page'), 
@@ -29,7 +27,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('view-courts/', views.view_courts, name='view_courts'),
     path('settings/', views.settings_page, name='settings_page'),
-    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),  # Admin dashboard URL pattern
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'), 
     path('cancel-booking/<int:court_id>/', views.cancel_booking, name='cancel_booking'),
     path('owner_profits/', views.owner_profits_view, name='owner_profits'),
     # path('owner/', views.court_owner_dashboard, name='court_owner_dashboard'),
