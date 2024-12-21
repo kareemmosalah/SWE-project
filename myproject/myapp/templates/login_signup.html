@@ -52,12 +52,17 @@
 
         <!-- Messages -->
         {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li class="{{ message.tags }}">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        <script>
+            setTimeout(function() {
+                document.querySelector('.messages').style.display = 'none';
+            }, 2000); // 4000 milliseconds = 4 seconds
+        </script>
+    {% endif %}
     </div>
 
     <!-- JavaScript for Form Toggle and Submission -->

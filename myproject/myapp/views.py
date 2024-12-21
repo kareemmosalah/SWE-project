@@ -244,30 +244,58 @@ def login_signup_page(request):
 
 
 
-def add_court(request): 
-    if request.method == 'POST': #if the request method is post.      
-        name = request.POST['courtName']  
-        location = request.POST['location'] 
-        price = request.POST['price'] 
-        city = request.POST['city'] 
-        contact_phone = request.user.username
-        contact_email = request.user.email  
+from .models import Court, CourtSchedule
+from django.contrib import messages
+from django.shortcuts import render, redirect
 
-        #save court to database
-        Court.objects.create(
+def add_court(request):
+    if request.method == 'POST':
+        name = request.POST['courtName']
+        location = request.POST.get('location', 'Cairo')
+        price = request.POST.get('price', '10')
+        city = request.POST.get('city', 'Cairo')
+        contact_phone = request.POST.get('contact_phone', request.user.username)
+        contact_email = request.user.email
+        details = request.POST.get('details', 'Details not provided')
+
+        # Save court to database
+        court = Court.objects.create(
             name=name,
             location=location,
             pricing=price,
-            city=city,  
+            city=city,
             contact_phone=contact_phone,
             contact_email=contact_email,
-            details='Details not provided', 
+            details=details,
             reviews='No reviews yet',
         )
+
+        # Default time slots
+        time_slots = [
+            {'time': '08:00 AM - 09:00 AM', 'status': 'Available'},
+            {'time': '09:00 AM - 10:00 AM', 'status': 'Available'},
+            {'time': '10:00 AM - 11:00 AM', 'status': 'Available'},
+            {'time': '11:00 AM - 12:00 PM', 'status': 'Available'},
+            {'time': '12:00 PM - 01:00 PM', 'status': 'Available'},
+            {'time': '01:00 PM - 02:00 PM', 'status': 'Available'},
+            {'time': '02:00 PM - 03:00 PM', 'status': 'Available'},
+            {'time': '03:00 PM - 04:00 PM', 'status': 'Available'},
+            {'time': '04:00 PM - 05:00 PM', 'status': 'Available'},
+            {'time': '05:00 PM - 06:00 PM', 'status': 'Available'},
+        ]
+
+        # Create CourtSchedule entries for the new court
+        for slot in time_slots:
+            CourtSchedule.objects.create(
+                court=court,
+                time=slot['time'],
+                status=slot['status']
+            )
+
         messages.success(request, "Court added successfully!")
         return redirect('court_owner_dashboard')
 
-    return render(request, 'owner.html') 
+    return render(request, 'owner.html')
 
 #view profits 
 def view_profits(request):
@@ -362,12 +390,23 @@ def home_page(request):
 @login_required
 def admin_dashboard(request):
     selected_city = request.GET.get('city', '') #to get the selected city.
+    selected_user_type = request.GET.get('user_type', '') #to get the selected user type
     
     if selected_city: 
         courts = Court.objects.filter(city=selected_city) #to get the courts for the selected city.
     else:
         courts = Court.objects.all() #to get all the courts.
     
+    if selected_user_type:
+        if selected_user_type == 'admin':
+            users = CustomUser.objects.filter(is_admin=True)
+        elif selected_user_type == 'court_owner':
+            users = CustomUser.objects.filter(is_court_owner=True)
+        elif selected_user_type == 'player':
+            users = CustomUser.objects.filter(is_player=True)
+    else:
+        users = CustomUser.objects.all()
+
     if request.method == 'POST':
         if 'court_id' in request.POST:
             court_id = request.POST.get('court_id')
@@ -387,13 +426,12 @@ def admin_dashboard(request):
 
     cities = Court.objects.values_list('city', flat=True).distinct() #to get the cities from the courts.
 
-    users = CustomUser.objects.all()
-
     context = {
         'courts': courts, 
         'cities': cities,
         'selected_city': selected_city,
         'users': users,
+        'selected_user_type': selected_user_type,
     }
     return render(request, 'admin_dashboard.html', context)
 

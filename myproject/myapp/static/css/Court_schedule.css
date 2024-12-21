@@ -56,7 +56,12 @@ body {
     color: #239931; /* Blue color on hover */
 }
 
-
+.messages {
+    transition: opacity 0.3s ease-out;
+}
+.messages.fade-out {
+    opacity: 0;
+}
 .container {
     width: 80%;
     margin: 0 auto;
