@@ -23,9 +23,10 @@ class Court(models.Model):
 
 #court schedule model to store the court schedule details. 
 class CourtSchedule(models.Model):
-    court_id = models.ForeignKey(Court, on_delete=models.CASCADE)
+    court= models.ForeignKey(Court, on_delete=models.CASCADE)
     time = models.CharField(max_length=20)
     status = models.CharField(max_length=20)
+    booked_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f'Court {self.court.name} - {self.time} - {self.status}'

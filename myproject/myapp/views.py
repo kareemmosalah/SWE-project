@@ -95,34 +95,61 @@ def courts_list(request):
     print(context)  
     return render(request, 'Courts_List.html', context)
 
-from django.shortcuts import render, redirect
+
+# def book_time(request, court_id):
+
+#     if request.method == 'POST':
+#         time_slot = request.POST.get('time_slot') #to book a time slot for a court.
+
+#         if not time_slot:
+#             messages.error(request, 'No time slot selected.') #if no time slot is selected.
+#             return redirect('court_schedule', court_id=court_id) #redirect to the court schedule page.
+
+#         try:
+#             slot = CourtSchedule.objects.get(court_id=court_id, time=time_slot) #to get the time slot for the court.
+#             if slot.status == 'Available': 
+#                 slot.status = 'Booked' #to book the time slot.
+#                 slot.save() #to save the time slot.
+#                 messages.success(request, f'Time slot "{time_slot}" booked successfully!') #to show a success message.
+#             else:
+#                 messages.error(request, f'Time slot "{time_slot}" is already booked.') #to show an error message.
+#         except CourtSchedule.DoesNotExist:
+#             messages.error(request, f'Time slot "{time_slot}" not found.')
+
+#         schedule = CourtSchedule.objects.filter(court_id=court_id) #to get the schedule for the court.
+#         return render(request, 'court_schedule.html', {'schedule': schedule, 'court_id': court_id}) #to render the court schedule page.
+
+#     return redirect('court_schedule', court_id=court_id)
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import CourtSchedule
 
+@login_required
 def book_time(request, court_id):
-
     if request.method == 'POST':
-        time_slot = request.POST.get('time_slot') #to book a time slot for a court.
+        time_slot = request.POST.get('time_slot')
 
         if not time_slot:
-            messages.error(request, 'No time slot selected.') #if no time slot is selected.
-            return redirect('court_schedule', court_id=court_id) #redirect to the court schedule page.
+            messages.error(request, 'No time slot selected.')
+            return redirect('court_schedule', court_id=court_id)
 
         try:
-            slot = CourtSchedule.objects.get(court_id=court_id, time=time_slot) #to get the time slot for the court.
-            if slot.status == 'Available': 
-                slot.status = 'Booked' #to book the time slot.
-                slot.save() #to save the time slot.
-                messages.success(request, f'Time slot "{time_slot}" booked successfully!') #to show a success message.
+            slot = CourtSchedule.objects.get(court_id=court_id, time=time_slot)
+            if slot.status == 'Available':
+                slot.status = 'Booked'
+                slot.booked_by = request.user  # Update booked_by with the current user
+                slot.save()
+                messages.success(request, f'Time slot "{time_slot}" booked successfully!')
             else:
-                messages.error(request, f'Time slot "{time_slot}" is already booked.') #to show an error message.
+                messages.error(request, f'Time slot "{time_slot}" is already booked.')
         except CourtSchedule.DoesNotExist:
             messages.error(request, f'Time slot "{time_slot}" not found.')
 
-        schedule = CourtSchedule.objects.filter(court_id=court_id) #to get the schedule for the court.
-        return render(request, 'court_schedule.html', {'schedule': schedule, 'court_id': court_id}) #to render the court schedule page.
-
-    return redirect('court_schedule', court_id=court_id)
+        # Pass updated schedule back to the template
+        schedule = CourtSchedule.objects.filter(court_id=court_id)
+        return render(request, 'court_schedule.html', {'schedule': schedule, 'court_id': court_id})
 
 def court_schedule(request, court_id):
     schedule = CourtSchedule.objects.filter(court_id=court_id) #to get the schedule for the court.
@@ -130,14 +157,32 @@ def court_schedule(request, court_id):
     return render(request, 'court_schedule.html', context) #to render the court schedule page.
 
 
+# def cancel_booking(request, court_id):
+#     if request.method == 'POST':
+#         time_slot = request.POST.get('time_slot') #to cancel a booking for a court. 
+#         court_schedule = get_object_or_404(CourtSchedule, court_id=court_id, time=time_slot) #to get the court schedule for the court.
+#         court_schedule.status = 'Available' #to set the status of the time slot to available.
+#         court_schedule.save() #to save the time slot.
+#         messages.success(request, 'Booking cancelled successfully.') #to show a success message.
+#         return redirect('court_schedule', court_id=court_id)
+#     return redirect('court_schedule', court_id=court_id)
+
+@login_required
 def cancel_booking(request, court_id):
     if request.method == 'POST':
-        time_slot = request.POST.get('time_slot') #to cancel a booking for a court. 
-        court_schedule = get_object_or_404(CourtSchedule, court_id=court_id, time=time_slot) #to get the court schedule for the court.
-        court_schedule.status = 'Available' #to set the status of the time slot to available.
-        court_schedule.save() #to save the time slot.
-        messages.success(request, 'Booking cancelled successfully.') #to show a success message.
+        time_slot = request.POST.get('time_slot')
+        court_schedule = get_object_or_404(CourtSchedule, court_id=court_id, time=time_slot)
+        
+        if court_schedule.booked_by != request.user:
+            messages.error(request, 'You can only cancel your own bookings.')
+            return redirect('court_schedule', court_id=court_id)
+        
+        court_schedule.status = 'Available'
+        court_schedule.booked_by = None
+        court_schedule.save()
+        messages.success(request, 'Booking cancelled successfully.')
         return redirect('court_schedule', court_id=court_id)
+    
     return redirect('court_schedule', court_id=court_id)
 
 
