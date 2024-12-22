@@ -31,7 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost','tegyhagzwebapp.azurewebsites.net', '127.0.0.1']
 
-
+APPEND_SLASH = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -68,7 +68,8 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-MIDDLEWARE = [
+MIDDLEWARE = [ 
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

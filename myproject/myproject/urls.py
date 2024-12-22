@@ -18,11 +18,11 @@ urlpatterns = [
     path('login-signup/', views.login_signup_page, name='login_signup_page'),
     path('book-time/<int:court_id>/', views.book_time, name='book_time'),
     path('user-profile/', views.user_profile, name='user_profile'),
-    path('owner', views.court_owner_dashboard, name='court_owner_dashboard'),
+    path('owner/', views.court_owner_dashboard, name='court_owner_dashboard'),
     path('Notification/', views.notification_page, name='notification'),
     path('change-username/', views.change_username, name='change_username'),
     path('change-password/', views.change_password, name='change_password'),
-    path('owner', views.court_owner_dashboard, name='court_owner_dashboard'),
+    
     path('add-court/', views.add_court, name='add_court'),
     path('logout/', views.logout_view, name='logout'),
     path('view-courts/', views.view_courts, name='view_courts'),
