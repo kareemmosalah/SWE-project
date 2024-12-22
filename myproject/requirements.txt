@@ -9,3 +9,5 @@ pyjwt==2.1.0
 Faker
 pandas
 plotly
+gunicorn
+whitenoise

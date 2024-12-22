@@ -1,4 +1,4 @@
-# filepath: /Users/kareemmohamed/SWE-project/myproject/Dockerfile
+# Dockerfile
 FROM python:3.9-slim
 
 # Set environment variables
@@ -14,3 +14,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project
 COPY . /code/
+
+# Collect static files
+RUN python manage.py collectstatic --noinput
+
+# Use the PORT environment variable
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT} myproject.wsgi:application"]

@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-+ffyv8qj8kt_bi2xy(9!9()%_701@%(5qk=q!kbeplgt5v3h#1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost','tegyhagzwebapp.azurewebsites.net', '127.0.0.1']
 
 
 # Application definition
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'whitenoise.runserver_nostatic',  # Add this line
 ]
 
 SITE_ID = 2
@@ -76,6 +77,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'myproject.urls'
@@ -106,17 +108,22 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB'),
-        'USER': os.getenv('POSTGRES_USER'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': os.getenv('POSTGRES_HOST'),
-        'PORT': os.getenv('POSTGRES_PORT'),
+        'NAME': os.getenv('POSTGRES_DB', 'Tegy_Hagz_db'),
+        'USER': os.getenv('POSTGRES_USER', 'Tegy_Hagz_db_owner'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'XnUryvc4Z6uK'),
+        'HOST': os.getenv('POSTGRES_HOST', 'ep-patient-bush-a5c67jl9.us-east-2.aws.neon.tech'),  # External database hostname
+        'PORT': os.getenv('POSTGRES_PORT', '5432'),       # Port for PostgreSQL
         'OPTIONS': {
-            'sslmode': 'require',
+            'sslmode': 'require',  # Ensures SSL connection for external databases
         },
     }
 }
 
+    #   POSTGRES_DB: Tegy_Hagz_db
+    #   POSTGRES_USER: Tegy_Hagz_db_owner
+    #   POSTGRES_PASSWORD: XnUryvc4Z6uK
+    #   POSTGRES_HOST: ep-patient-bush-a5c67jl9.us-east-2.aws.neon.tech  # External database host
+    #   POSTGRES_PORT: 5432
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -147,12 +154,13 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Default primary key field type

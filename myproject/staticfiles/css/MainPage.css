@@ -1,0 +1,76 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container Layout */
+.container {
+    display: flex;
+    justify-content: center; /* Center all content horizontally */
+    align-items: center;
+    flex-direction: row; /* Align text and image horizontally */
+    padding: 40px;
+    text-align: left; /* Align text to the left */
+}
+
+/* Text Section Styles */
+.text-section {
+    max-width: 50%; /* Limit width for better layout */
+    padding-right: 20px; /* Add spacing between text and image */
+}
+
+/* Button Group Styles */
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Add spacing between buttons */
+}
+
+.button-group button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-group button:hover {
+    background-color: #0056b3;
+}
+
+/* Image Section Styles */
+.image-section {
+    max-width: 50%; /* Ensure equal division with text */
+    text-align: center; /* Align image to the center */
+}
+
+.image-section img {
+    max-width: 100%; /* Ensure image fits within its section */
+    /* Remove border-radius for square corners */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Stack text and image vertically */
+        align-items: center;
+        text-align: center;
+    }
+
+    .text-section {
+        max-width: 100%;
+        padding-bottom: 20px;
+    }
+
+    .image-section {
+        max-width: 100%;
+    }
+}

@@ -1,0 +1,138 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar container */
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Logo styling */
+.logo a {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #239931;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.logo a:hover {
+    color: #0f6f28;
+}
+
+/* Nav links container */
+.nav-links {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #239931;
+}
+
+/* Main Container */
+.container {
+    width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+/* Text Section Styles */
+.text-section {
+    max-width: 50%; /* Take half the space */
+    padding-right: 20px;
+}
+
+.text-section h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+.details, .pricing, .location {
+    margin-bottom: 20px;
+}
+
+.details h3, .pricing h3, .location h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+/* Image Section Styles */
+.image-section {
+    max-width: 50%; /* Ensure equal division with text */
+    text-align: center; /* Align image to the center */
+}
+
+.image-section img {
+    max-width: 100%; /* Ensure image fits within its section */
+    height: auto; /* Maintain aspect ratio */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Remove border-radius for square corners */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Stack text and image vertically */
+        align-items: center;
+        text-align: center;
+    }
+
+    .text-section {
+        max-width: 100%;
+        padding-bottom: 20px;
+    }
+
+    .image-section {
+        max-width: 100%;
+    }
+}
+
+/* Button Styling */
+form {
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}

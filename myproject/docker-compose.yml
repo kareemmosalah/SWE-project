@@ -3,30 +3,24 @@ version: '3.8'
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/code
+    command: gunicorn -b 0.0.0.0:80 myproject.wsgi:application
     ports:
-      - "8000:8000"
-    depends_on:
-      - db
+      - "8000:80"  # Map host port 8000 to container port 80
     environment:
       POSTGRES_DB: Tegy_Hagz_db
       POSTGRES_USER: Tegy_Hagz_db_owner
       POSTGRES_PASSWORD: XnUryvc4Z6uK
-      POSTGRES_HOST: ep-patient-bush-a5c67jl9.us-east-2.aws.neon.tech
+      POSTGRES_HOST: ep-patient-bush-a5c67jl9.us-east-2.aws.neon.tech  # External database host
       POSTGRES_PORT: 5432
-
-  db:
-    image: postgres:13
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: Tegy_Hagz_db
-      POSTGRES_USER: Tegy_Hagz_db_owner
-      POSTGRES_PASSWORD: XnUryvc4Z6uK
-      POSTGRES_HOST: ep-patient-bush-a5c67jl9.us-east-2.aws.neon.tech
-      POSTGRES_PORT: 5432
+      - .:/code  # Mount project directory
+    depends_on:
+      - check-db-ready  # Wait for DB readiness
+
+  check-db-ready:
+    image: appropriate/curl
+    entrypoint: ["sh", "-c", "while ! nc -z ep-patient-bush-a5c67jl9.us-east-2.aws.neon.tech 5432; do sleep 1; done;"]
+    depends_on: []
 
 volumes:
   postgres_data:
