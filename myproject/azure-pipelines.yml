@@ -45,3 +45,6 @@ steps:
     appName: 'tegyHagzWebApp'  # Your App Service Name
     package: '$(Build.ArtifactStagingDirectory)/*.zip'
     runtimeStack: 'PYTHON|3.9'
+- script: |
+    az webapp restart --name tegyHagzWebApp --resource-group tegy-hagz
+  displayName: 'Restart Azure Web App'
