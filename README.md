@@ -1,71 +1,100 @@
-# Getting Started with Create React App
+Here’s the updated guide for running the project locally, including running npm run build before starting the Django server:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+How to Run the Django + React Project Locally
 
-## Available Scripts
+1. Prerequisites
 
-In the project directory, you can run:
+Make sure you have the following installed on your system:
+	•	Python 3.8+
+	•	Node.js 14+
+	•	PostgreSQL (optional if you’re using SQLite for local development)
 
-### `npm start`
+2. Clone the Repository
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+	1.	Open your terminal or command prompt.
+	2.	Run the following command to clone the repository:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+    ```
+    git clone -b django-test https://github.com/kareemmosalah/SWE-project.git
+3.	Navigate into the project directory:
+   
+    ```
+    cd SWE-project
+3. Frontend (React) Setup
 
-### `npm test`
+	1.	Navigate to the front-end directory:
+    
+    ```
+    cd myproject/front-end
+  2.	Install the frontend dependencies:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    npm install
+  3.	Build the React app for production:
 
-### `npm run build`
+    npm run build
+This will generate the static files required to serve the React app from Django in the build directory.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. Backend (Django) Setup
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+	1.	Navigate to the myproject directory:
+    
+    ```
+    cd ../
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+2.	Create a virtual environment for Python:
+   
+    ```
+    python -m venv myenv
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+4.	Activate the virtual environment:
+	•	On Linux/Mac:
+    ```
+    source myenv/bin/activate
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+  •	On Windows:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+    myenv\Scripts\activate
 
-## Learn More
+4.	Install the backend dependencies:
+    ```
+    pip install -r requirements.txt
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+5.	Set up the database:
+    ```
+    python manage.py migrate
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+6.	Start the Django development server:
+    ```
+    python manage.py runserver
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The backend will now serve the React app at http://127.0.0.1:8000/.
 
-### Analyzing the Bundle Size
+5. Access the Application
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+	•	Open a browser and go to http://127.0.0.1:8000/.
+	•	This will load the Django server, which serves the built React frontend.
 
-### Making a Progressive Web App
+6. Notes for Local Development
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+	•	Frontend Changes:
+	•	If you make changes to the React code, you’ll need to rebuild the app:
+    ```
+    cd myproject/front-end
+    npm run build
 
-### Advanced Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+•	After rebuilding, restart the Django server for the changes to take effect.
 
-### Deployment
+•	Backend Changes:
+•	If you make changes to the Django code, restart the Django server by pressing Ctrl+C in the terminal and running:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+    python manage.py runserver
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+•	Environment Variables:
+•	For sensitive information like SECRET_KEY or database credentials, use a .env file. Ensure your settings.py uses django-environ to load environment variables.
+
 
