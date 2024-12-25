@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'whitenoise.runserver_nostatic',  # Add this line
+    'whitenoise.runserver_nostatic', 
 ]
 
 SITE_ID = 2
@@ -120,14 +120,6 @@ DATABASES = {
     }
 }
 
-    #   POSTGRES_DB: Tegy_Hagz_db
-    #   POSTGRES_USER: Tegy_Hagz_db_owner
-    #   POSTGRES_PASSWORD: XnUryvc4Z6uK
-    #   POSTGRES_HOST: ep-patient-bush-a5c67jl9.us-east-2.aws.neon.tech  # External database host
-    #   POSTGRES_PORT: 5432
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
